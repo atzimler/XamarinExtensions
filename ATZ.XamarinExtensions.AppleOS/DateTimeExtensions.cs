@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using System;
 
-namespace ATZ.PlatformAccess.iOS
+namespace ATZ.PlatformAccess.AppleOS
 {
     public static class DateTimeExtensions
     {
