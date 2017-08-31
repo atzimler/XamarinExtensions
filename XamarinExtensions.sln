@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATZ.XamarinExtensions", "ATZ.XamarinExtensions\ATZ.XamarinExtensions.csproj", "{52772D2D-A08F-4D78-A798-C005EFBB8AD0}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ATZ.XamarinExtensions.AppleOS", "ATZ.XamarinExtensions.AppleOS\ATZ.XamarinExtensions.AppleOS.shproj", "{28F6398C-5835-434F-8B8A-7CD732DC8964}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATZ.XamarinExtensions.iOS", "ATZ.XamarinExtensions.iOS\ATZ.XamarinExtensions.iOS.csproj", "{0AAEFA04-EE72-44EA-898B-80CE05D653EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +17,9 @@ Global
 		{52772D2D-A08F-4D78-A798-C005EFBB8AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52772D2D-A08F-4D78-A798-C005EFBB8AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52772D2D-A08F-4D78-A798-C005EFBB8AD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AAEFA04-EE72-44EA-898B-80CE05D653EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AAEFA04-EE72-44EA-898B-80CE05D653EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AAEFA04-EE72-44EA-898B-80CE05D653EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AAEFA04-EE72-44EA-898B-80CE05D653EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
