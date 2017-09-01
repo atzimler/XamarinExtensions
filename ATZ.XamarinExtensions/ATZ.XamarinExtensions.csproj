@@ -36,6 +36,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ATZ.XamarinExtensions.nuspec" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.11.0.0\lib\portable-net4+sl50+win8+wpa81+wp8\JetBrains.Annotations.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
