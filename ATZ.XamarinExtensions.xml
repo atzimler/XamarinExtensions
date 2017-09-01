@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="ATZ.XamarinExtensions" default="help">
+  <description>Build file for ATZ.XamarinExtensions library.</description>
+  
+  <property name="project.name" value="XamarinExtensions" />
+  <include buildfile="../NAnt/ATZ.Build.xml" />
+</project>
