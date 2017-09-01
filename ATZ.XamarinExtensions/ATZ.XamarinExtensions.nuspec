@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://raw.githubusercontent.com/atzimler/Reflection/master/LICENSE.txt</licenseUrl>
+    <description>Generic library for extending reflection capabilities of the .NET Framework.</description>
+    <releaseNotes>
+3.1.0:
+- TypeExtensions.IntrospectionBaseType() for easily accessing the BaseType information.
+- Retaining code annotations.
+
+3.0.0:
+- PCL 259.
+      
+2.2.0:
+- Type.CloseTemplate() does not return null, because in case of error it throws an Exception.
+
+2.1.0:
+- Retaining the ReSharper annotations in the assembly symbols.
+      
+2.0.0:
+- Eliminating possibilities for null reference exceptions and adding annotations for ReSharper.
+      
+1.3.2:
+- Excluding unintentionally delivered DLLs from the NuGet package.
+      
+1.3.1:
+- Fixing 4th version number to be the number of the build instead some time dependent number indicated by *, as in case of time dependency different target frameworks got different numbers.
+      
+1.3.0:
+- Supporting .NET 4.5 target framework.
+      
+1.2.0:
+- ImplBase class for wrapping implementation objects without revealing their types and thus avoiding references to DLLs of their implementation.
+      
+1.1.3:
+- Fixing missing project option with the XML documentation.
+      
+1.1.2:
+- First try to fix the problem with missing documentation of the API.
+
+1.1.1:
+- Added GenericTypeParameterCount.
+- Making a try to fit Semantic Versioning into the build system.
+- Also found a bug in NonGenericName(), so lets find out if SemVer is going to be able to work with my build system.
+    </releaseNotes>
+    <copyright>Copyright 2016</copyright>
+  </metadata>
+
+  <files>
+    <file src="bin\Debug\ATZ.Reflection*.*" target="lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20" />
+  </files>
+</package>

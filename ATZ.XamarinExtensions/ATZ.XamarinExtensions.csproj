@@ -34,5 +34,8 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ATZ.XamarinExtensions.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
