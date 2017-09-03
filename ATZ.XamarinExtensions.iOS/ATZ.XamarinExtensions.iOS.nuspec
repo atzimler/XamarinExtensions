@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://raw.githubusercontent.com/atzimler/XamarinExtensions/master/LICENSE.txt</licenseUrl>
+    <description>Library for additional Xamarin.Forms API, iOS specific parts.</description>
+    <releaseNotes>
+1.0.0:
+- Initial NuGet packaging.
+    </releaseNotes>
+    <copyright>Copyright 2017</copyright>
+  </metadata>
+
+  <files>
+    <file src="bin\Debug\ATZ.XamarinExtensions*.*" target="lib\Xamarin.iOS10" />
+  </files>
+</package>
