@@ -1,6 +1,7 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATZ.XamarinExtensions", "ATZ.XamarinExtensions\ATZ.XamarinExtensions.csproj", "{52772D2D-A08F-4D78-A798-C005EFBB8AD0}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ATZ.XamarinExtensions.AppleOS", "ATZ.XamarinExtensions.AppleOS\ATZ.XamarinExtensions.AppleOS.shproj", "{28F6398C-5835-434F-8B8A-7CD732DC8964}"
@@ -9,12 +10,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATZ.XamarinExtensions.iOS",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D9B1B98-ED2D-488B-B51D-4E6764F84439}"
 	ProjectSection(SolutionItems) = preProject
-		LICENSE.txt = LICENSE.txt
 		AssemblyVersion.cs = AssemblyVersion.cs
 		ATZ.XamarinExtensions.xml = ATZ.XamarinExtensions.xml
+		LICENSE.txt = LICENSE.txt
 	EndProjectSection
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ATZ.XamarinExtensions.AppleOS\ATZ.XamarinExtensions.AppleOS.projitems*{0aaefa04-ee72-44ea-898b-80ce05d653ee}*SharedItemsImports = 4
+		ATZ.XamarinExtensions.AppleOS\ATZ.XamarinExtensions.AppleOS.projitems*{28f6398c-5835-434f-8b8a-7cd732dc8964}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -28,5 +33,11 @@ Global
 		{0AAEFA04-EE72-44EA-898B-80CE05D653EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AAEFA04-EE72-44EA-898B-80CE05D653EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AAEFA04-EE72-44EA-898B-80CE05D653EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A04A192C-F178-49AE-9ED3-5606704E5EB9}
 	EndGlobalSection
 EndGlobal
