@@ -1,5 +1,4 @@
 ﻿using Foundation;
-using JetBrains.Annotations;
 using System;
 
 namespace ATZ.PlatformAccess.AppleOS
@@ -19,25 +18,25 @@ namespace ATZ.PlatformAccess.AppleOS
         }
 
         // ReSharper disable once InconsistentNaming => NSDate is the name of the type.
-        public static DateTime FromNSDate(this DateTime dateTime, [NotNull] NSDate nsDate)
+        public static DateTime FromNSDate(this DateTime dateTime, [JetBrains.Annotations.NotNull] NSDate nsDate)
         {
             return nsDate.ToDateTime();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static DateTime DateTime(NSDate nsDate)
         {
             return nsDate.ToDateTime();
         }
 
         // ReSharper disable once InconsistentNaming => NSDate is the name of the type.
-        public static NSDate NSDate([NotNull] DateTime dateTime)
+        public static NSDate NSDate([JetBrains.Annotations.NotNull] DateTime dateTime)
         {
             return dateTime.ToNSDate();
         }
 
         // ReSharper disable once MemberCanBePrivate.Global => Part of API
-        public static DateTime ToDateTime([NotNull] this NSDate nsDate)
+        public static DateTime ToDateTime([JetBrains.Annotations.NotNull] this NSDate nsDate)
         {
             var dateTimeInUtc = ReferenceDateInUtc.AddSeconds(nsDate.SecondsSinceReferenceDate);
             return TimeZoneInfo.ConvertTimeFromUtc(dateTimeInUtc, TimeZoneInfo.Local);
