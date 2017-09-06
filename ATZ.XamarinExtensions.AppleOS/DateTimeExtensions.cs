@@ -35,6 +35,7 @@ namespace ATZ.PlatformAccess.AppleOS
             return dateTime.ToNSDate();
         }
 
+        // Fun fact: It turns out that this specific function is also implemented in Xamarin.Forms.Platform.iOS - however, it is currently missing from the MacOS platform.
         // ReSharper disable once MemberCanBePrivate.Global => Part of API
         public static DateTime ToDateTime([JetBrains.Annotations.NotNull] this NSDate nsDate)
         {
@@ -42,6 +43,7 @@ namespace ATZ.PlatformAccess.AppleOS
             return TimeZoneInfo.ConvertTimeFromUtc(dateTimeInUtc, TimeZoneInfo.Local);
         }
 
+        // Fun fact: It turns out that this specific function is also implemented in Xamarin.Forms.Platform.iOS - however, it is currently missing from the MacOS platform.
         // ReSharper disable once InconsistentNaming => NSDate is the name of the type.
         // ReSharper disable once MemberCanBePrivate.Global => Part of API
         public static NSDate ToNSDate(this DateTime dateTime)
