@@ -49,16 +49,33 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             Assert.AreEqual(new DateTime(2018, 4, 5, 5, 0, 0), dateTime4);
 
 
-
-            // Check if DateTime should be adjusted:
-
-
+            MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
+  
 
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
             var testFixture = new DateTimeExtensionsShould();
             testFixture.ConvertsDateCorrectly();
+        }
+
+        private void MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference()
+        {
+            var expected = 536418000;
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(expected);
+            Assert.AreEqual("2017-12-31 13:00:00 +0000", nsDate.ToString());
+
+            var toSeconds = 567954000;
+            var toNSDate = NSDate.FromTimeIntervalSinceReferenceDate(toSeconds);
+            Assert.AreEqual("2018-12-31 13:00:00 +0000", toNSDate.ToString());
+
+            while (expected < toSeconds)
+            {
+                Assert.AreEqual(expected, (int)nsDate.SecondsSinceReferenceDate);
+
+                expected += 300;
+                nsDate = NSDate.FromTimeIntervalSinceReferenceDate(expected);
+            }
         }
 
         public override NSObject RepresentedObject
