@@ -75,7 +75,9 @@ namespace ATZ.PlatformAccess.AppleOS
             if (LocalTimeZoneInfo.SupportsDaylightSavingTime)
             {
                 var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => convertedDateTime.Between(r.DateStart, r.DateEnd));
-                if (adjustmentRule != null && convertedDateTime.Outside(adjustmentRule.DaylightSaving()))
+                if (adjustmentRule != null 
+                    && (convertedDateTime.IsDaylightSavingTime() || dateTimeInUtc.IsDaylightSavingTime())
+                    && convertedDateTime.Outside(adjustmentRule.DaylightSaving()))
                 {
                     convertedDateTime -= adjustmentRule.DaylightDelta;
                 }

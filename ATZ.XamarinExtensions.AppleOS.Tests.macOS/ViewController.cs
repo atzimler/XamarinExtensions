@@ -29,16 +29,17 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             //Assert.AreEqual(544219200, nsDate.SecondsSinceReferenceDate);
 
             // Local TZ is Australia, Sydney, DayLightName: AEDT, Standard Name: AEST
-            VerifyIfBugStillExists();
+            //VerifyIfBugStillExists();
 
             //MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-            //VerifyNSDateToDateTime();
+            VerifyNSDateToDateTime();
 
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
-            var testFixture = new DateTimeExtensionsShould();
+            var testFixture = new DateTimeExtensionsFromNSDateToDateTimeShould();
             testFixture.ConvertDaylightTransitionStartCorrectlyFromNSDateToDateTime();
+            testFixture.ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectly();
             testFixture.ConvertsDateCorrectly();
         }
 
@@ -73,26 +74,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             while (pointInTime < endInspectionPointInTime)
             {
                 var inspectedNSDate = NSDate.FromTimeIntervalSinceReferenceDate(pointInTime);
-                var convertedDateTime = inspectedNSDate.ToDateTime();
-
-                if (expectedDateTime.ToString() != convertedDateTime.ToString())
-                {
-                    if (TimeZoneInfo.Local.SupportsDaylightSavingTime)
-                    {
-                        var adjustmentRule = TimeZoneInfo.Local.GetAdjustmentRules().FirstOrDefault(r => convertedDateTime.Between(r.DateStart, r.DateEnd));
-                        if (adjustmentRule != null)
-                        {
-                            if (convertedDateTime.Outside(adjustmentRule.DaylightSaving()))
-                            {
-                                convertedDateTime -= adjustmentRule.DaylightDelta;
-                            }
-                            //if (convertedDateTime < adjustmentRule.DaylightTransitionStart || adjustmentRule.DaylightTransitionEnd <= convertedDateTime)
-                            //{
-                            //    convertedDateTime -= adjustmentRule.DaylightDelta;
-                            //}
-                        }
-                    }
-                }
+                var convertedDateTime = inspectedNSDate.ToDateTimeV2();
 
                 Assert.AreEqual(expectedDateTime.ToString(), convertedDateTime.ToString(), $"point in time: {pointInTime}");
 
