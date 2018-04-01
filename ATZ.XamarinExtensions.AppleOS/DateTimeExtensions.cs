@@ -21,7 +21,7 @@ namespace ATZ.PlatformAccess.AppleOS
         {
             if (convertedDateTime.Kind == DateTimeKind.Local)
             {
-                return false;
+                return true;
             }
 
             return convertedDateTime.IsDaylightSavingTime() || dateTimeInUtc.IsDaylightSavingTime();

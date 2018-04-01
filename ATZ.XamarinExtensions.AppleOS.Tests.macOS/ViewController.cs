@@ -42,6 +42,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             testFixture.ConvertDaylightTransitionStartCorrectlyEvenIfSystemInitializedTheTimeZone();
             testFixture.ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectly();
             testFixture.ConvertsDateCorrectly();
+            testFixture.ConvertsDateCorrectlyEvenIfSystemInitializedTheTimeZone();
         }
 
         private void VerifyIfBugStillExists()
