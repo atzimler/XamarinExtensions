@@ -43,6 +43,17 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
         }
 
         [Test]
+        public void ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectlyEvenIfSystemInitializedTheTimeZone()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544244400);
+            Assert.AreEqual("2018-04-01 03:00:00 +0000", nsDate.ToString());
+
+            var convertedTime = nsDate.ToDateTimeV2();
+            Assert.AreEqual(new DateTime(2018, 4, 1, 13, 0, 0), convertedTime);
+        }
+
+        [Test]
         public void ConvertsDateCorrectly()
         {
             DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
