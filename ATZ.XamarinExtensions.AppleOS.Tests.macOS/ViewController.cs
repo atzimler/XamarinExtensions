@@ -32,13 +32,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             //VerifyIfBugStillExists();
 
             //MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-            VerifyNSDateToDateTime();
+            //VerifyNSDateToDateTime();
 
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
             var testFixture = new DateTimeExtensionsFromNSDateToDateTimeShould();
-            testFixture.ConvertDaylightTransitionStartCorrectlyFromNSDateToDateTime();
+            testFixture.ConvertDaylightTransitionStartCorrectly();
+            testFixture.ConvertDaylightTransitionStartCorrectlyEvenIfSystemInitializedTheTimeZone();
             testFixture.ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectly();
             testFixture.ConvertsDateCorrectly();
         }

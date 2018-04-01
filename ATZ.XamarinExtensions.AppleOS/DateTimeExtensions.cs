@@ -17,6 +17,16 @@ namespace ATZ.PlatformAccess.AppleOS
             ReferenceDateInUtc = new DateTime(2001, 1, 1, 0, 0, 0);
         }
 
+        private static bool IsDaylightAdjustmentMisaligned(DateTime convertedDateTime, DateTime dateTimeInUtc)
+        {
+            if (convertedDateTime.Kind == DateTimeKind.Local)
+            {
+                return false;
+            }
+
+            return convertedDateTime.IsDaylightSavingTime() || dateTimeInUtc.IsDaylightSavingTime();
+        }
+
         #region Interval Operators
         public static bool Between(this DateTime dateTime, DateTime from, DateTime to)
         {
@@ -76,7 +86,7 @@ namespace ATZ.PlatformAccess.AppleOS
             {
                 var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => convertedDateTime.Between(r.DateStart, r.DateEnd));
                 if (adjustmentRule != null 
-                    && (convertedDateTime.IsDaylightSavingTime() || dateTimeInUtc.IsDaylightSavingTime())
+                    && IsDaylightAdjustmentMisaligned(convertedDateTime, dateTimeInUtc)
                     && convertedDateTime.Outside(adjustmentRule.DaylightSaving()))
                 {
                     convertedDateTime -= adjustmentRule.DaylightDelta;
