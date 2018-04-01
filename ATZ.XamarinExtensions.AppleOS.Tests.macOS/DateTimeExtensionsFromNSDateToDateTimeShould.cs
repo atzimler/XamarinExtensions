@@ -1,141 +1,90 @@
 ﻿using System;
 using NUnit.Framework;
-using ATZ.XamarinExtensions.AppleOS;
 using ATZ.PlatformAccess.AppleOS;
 using Foundation;
 
 namespace ATZ.XamarinExtensions.AppleOS.Tests
 {
+    public static class NSDateExtensions
+    {
+        public static void Is(this NSDate nsDate, string utcDateString, DateTime localDateTime)
+        {
+            Assert.AreEqual(utcDateString, nsDate.ToString());
+            Assert.AreEqual(localDateTime, nsDate.ToDateTime());
+        }
+    }
+
     [TestFixture]
     public class DateTimeExtensionsFromNSDateToDateTimeShould
     {
-        [Test]
-        public void ConvertDaylightTransitionStartCorrectly()
+        private readonly DateTime ReferenceDateTimeUtc = new DateTime(2001, 1, 1, 0, 0, 0);
+        private readonly DateTime DaylightStartsAtUtc = new DateTime(2018, 10, 6, 16, 0, 0);
+        private readonly DateTime DaylightEndsAtUtc = new DateTime(2019, 4, 6, 16, 0, 0);
+
+        private NSDate GetNSDateUtc(DateTime utcDateTime)
+        {
+            return NSDate.FromTimeIntervalSinceReferenceDate((utcDateTime - ReferenceDateTimeUtc).TotalSeconds);
+        }
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560534400);
-            Assert.AreEqual("2018-10-06 16:00:00 +0000", nsDate.ToString());
-
-            var convertedDateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 10, 7, 3, 0, 0), convertedDateTime);
         }
 
         [Test]
-        public void ConvertDaylightTransitionStartCorrectlyEvenIfSystemInitializedTheTimeZone()
+        public void Winter()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560534400);
-            Assert.AreEqual("2018-10-06 16:00:00 +0000", nsDate.ToString());
-
-            var convertedDateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 10, 7, 3, 0, 0), convertedDateTime);
+            var nsDate = GetNSDateUtc(new DateTime(2018, 7, 1, 0, 0, 0));
+            nsDate.Is("2018-07-01 00:00:00 +0000", new DateTime(2018, 7, 1, 10, 0, 0));
         }
 
         [Test]
-        public void ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectly()
+        public void BeforeDaylight()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544244400);
-            Assert.AreEqual("2018-04-01 03:00:00 +0000", nsDate.ToString());
-
-            var convertedTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 4, 1, 13, 0, 0), convertedTime);
+            var nsDate = GetNSDateUtc(DaylightStartsAtUtc.AddHours(-1));
+            nsDate.Is("2018-10-06 15:00:00 +0000", new DateTime(2018, 10, 7, 1, 0, 0));
         }
 
         [Test]
-        public void ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectlyEvenIfSystemInitializedTheTimeZone()
+        public void StartDaylightCorrectly()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544244400);
-            Assert.AreEqual("2018-04-01 03:00:00 +0000", nsDate.ToString());
-
-            var convertedTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 4, 1, 13, 0, 0), convertedTime);
+            var nsDate = GetNSDateUtc(DaylightStartsAtUtc);
+            nsDate.Is("2018-10-06 16:00:00 +0000", new DateTime(2018, 10, 7, 3, 0, 0));
         }
 
         [Test]
-        public void ConvertsDateCorrectly()
+        public void AfterDaylight()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544219200);
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 4, 1, 6, 0, 0), dateTime);
+            var nsDate = GetNSDateUtc(DaylightStartsAtUtc.AddHours(1));
+            nsDate.Is("2018-10-06 17:00:00 +0000", new DateTime(2018, 10, 7, 4, 0, 0));
         }
 
         [Test]
-        public void ConvertsDateCorrectlyEvenIfSystemInitializedTheTimeZone()
+        public void Summer()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544219200);
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 4, 1, 6, 0, 0), dateTime);
+            var nsDate = GetNSDateUtc(new DateTime(2018, 12, 24, 0, 0, 0));
+            nsDate.Is("2018-12-24 00:00:00 +0000", new DateTime(2018, 12, 24, 11, 0, 0));
         }
 
         [Test]
-        public void AESTNewYearIsCorrect()
+        public void BeforeStandard()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(536418000);
-            Assert.AreEqual("2017-12-31 13:00:00 +0000", nsDate.ToString());
-
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 1, 1, 0, 0, 0), dateTime);
+            var nsDate = GetNSDateUtc(DaylightEndsAtUtc.AddHours(-1));
+            nsDate.Is("2019-04-06 15:00:00 +0000", new DateTime(2019, 4, 7, 2, 0, 0));
         }
 
         [Test]
-        public void AESTNewYearIsCorrectEvenIfTheSystemInitializedTheTimeZone()
+        public void EndDaylightCorrectly()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(536418000);
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 1, 1, 0, 0, 0), dateTime);
+            var nsDate = GetNSDateUtc(DaylightEndsAtUtc);
+            nsDate.Is("2019-04-06 16:00:00 +0000", new DateTime(2019, 4, 7, 2, 0, 0));
         }
 
-        [Test]
-        public void TransitionedBackToAESTCorrectly()
+        public void AfterStandard()
         {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560538000);
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 10, 7, 4, 0, 0), dateTime);
-        }
-
-        [Test]
-        public void TransitionedBackToAESTCorrectlyEvenIfTheSystemInitializedTheTimeZone()
-        {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560538000);
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 10, 7, 4, 0, 0), dateTime);
-        }
-
-        [Test]
-        public void UtcCrossedDaylightSavingTransitionBackReferenceZone()
-        {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560570400);
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 10, 7, 13, 0, 0), dateTime);
-        }
-
-        [Test]
-        public void UtcCrossedDaylightSavingTransitionBackReferenceZoneEvenIfTheSystemInitializedTheTimeZone()
-        {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560570400);
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 10, 7, 13, 0, 0), dateTime);
-        }
-
-        [Test]
-        public void EndingDaylight()
-        {
-            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544204800);
-            Assert.AreEqual("2018-03-31 16:00:00 +0000", nsDate.ToString());
-
-            var dateTime = nsDate.ToDateTimeV2();
-            Assert.AreEqual(new DateTime(2018, 4, 1, 2, 0, 0), dateTime);
+            var nsDate = GetNSDateUtc(DaylightEndsAtUtc.AddHours(1));
+            nsDate.Is("2019-04-06 17:00:00 +0000", new DateTime(2019, 4, 7, 3, 0, 0));
         }
     }
 }

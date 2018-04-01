@@ -32,33 +32,30 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             VerifyIfBugStillExists();
 
             //MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-            //VerifyNSDateToDateTime();
+            VerifyNSDateToDateTime();
 
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
             var testFixture = new DateTimeExtensionsFromNSDateToDateTimeShould();
-            testFixture.ConvertDaylightTransitionStartCorrectly();
-            testFixture.ConvertDaylightTransitionStartCorrectlyEvenIfSystemInitializedTheTimeZone();
-            testFixture.ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectly();
-            testFixture.ConvertUtcTimeCrossingOnDaylightSavingEndReferenceZoneCorrectlyEvenIfSystemInitializedTheTimeZone();
-            testFixture.ConvertsDateCorrectly();
-            testFixture.ConvertsDateCorrectlyEvenIfSystemInitializedTheTimeZone();
-            testFixture.AESTNewYearIsCorrect();
-            testFixture.AESTNewYearIsCorrectEvenIfTheSystemInitializedTheTimeZone();
-            testFixture.TransitionedBackToAESTCorrectly();
-            testFixture.TransitionedBackToAESTCorrectlyEvenIfTheSystemInitializedTheTimeZone();
-            testFixture.UtcCrossedDaylightSavingTransitionBackReferenceZone();
-            testFixture.UtcCrossedDaylightSavingTransitionBackReferenceZoneEvenIfTheSystemInitializedTheTimeZone();
-            testFixture.EndingDaylight();
+            testFixture.OneTimeSetUp();
+            testFixture.Winter();
+            testFixture.BeforeDaylight();
+            testFixture.StartDaylightCorrectly();
+            testFixture.AfterDaylight();
+            testFixture.Summer();
+            testFixture.BeforeStandard();
+            testFixture.EndDaylightCorrectly();
+            testFixture.AfterStandard();
         }
 
         private void VerifyIfBugStillExists()
         {
-            // This is the incorrect conversion.
+            // This is now a correct conversion.
             var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544219200); // 2018/03/31, 20:00:00 +0000
             var dateTime = nsDate.ToDateTime(); // UTC+10 - clock change occured during the night
-            Assert.AreEqual(new DateTime(2018, 4, 1, 7, 0, 0), dateTime);
+            Assert.AreEqual("2018-03-31 20:00:00 +0000", nsDate.ToString());
+            Assert.AreEqual(new DateTime(2018, 4, 1, 6, 0, 0), dateTime);
 
             // Just to make sure everything really works, the other side of the problematic event (the starting date) was this.
             var nsDate2 = NSDate.FromTimeIntervalSinceReferenceDate(544186800); // 2018/03/31, 11:00:00 +0000
@@ -84,7 +81,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             while (pointInTime < endInspectionPointInTime)
             {
                 var inspectedNSDate = NSDate.FromTimeIntervalSinceReferenceDate(pointInTime);
-                var convertedDateTime = inspectedNSDate.ToDateTimeV2();
+                var convertedDateTime = inspectedNSDate.ToDateTime();
 
                 Assert.AreEqual(expectedDateTime.ToString(), convertedDateTime.ToString(), $"point in time: {pointInTime}");
 

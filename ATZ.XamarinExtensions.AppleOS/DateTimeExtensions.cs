@@ -28,16 +28,6 @@ namespace ATZ.PlatformAccess.AppleOS
         {
             return from <= dateTime && dateTime <= to;
         }
-
-        public static bool Outside(this DateTime dateTime, ValueTuple<DateTime, DateTime> interval)
-        {
-            return Outside(dateTime, interval.Item1, interval.Item2);
-        }
-
-        public static bool Outside(this DateTime dateTime, DateTime from, DateTime to)
-        {
-            return !Between(dateTime, from, to);
-        }
         #endregion
 
         #region Conversions between NSDate and DateTime
@@ -66,15 +56,7 @@ namespace ATZ.PlatformAccess.AppleOS
 
         // Fun fact: It turns out that this specific function is also implemented in Xamarin.Forms.Platform.iOS - however, it is currently missing from the MacOS platform.
         // ReSharper disable once MemberCanBePrivate.Global => Part of API
-        public static DateTime ToDateTime([JetBrains.Annotations.NotNull] this NSDate nsDate)
-        {
-            var dateTimeInUtc = ReferenceDateInUtc.AddSeconds(nsDate.SecondsSinceReferenceDate);
-            return TimeZoneInfo.ConvertTimeFromUtc(dateTimeInUtc, TimeZoneInfo.Local);
-        }
-
-        // Fun fact: It turns out that this specific function is also implemented in Xamarin.Forms.Platform.iOS - however, it is currently missing from the MacOS platform.
-        // ReSharper disable once MemberCanBePrivate.Global => Part of API
-        public static DateTime ToDateTimeV2([NotNull] this NSDate nsDate)
+        public static DateTime ToDateTime([NotNull] this NSDate nsDate)
         {
             var dateTimeInUtc = ReferenceDateInUtc.AddSeconds(nsDate.SecondsSinceReferenceDate);
             var convertedDateTime = dateTimeInUtc + LocalTimeZoneInfo.BaseUtcOffset;
