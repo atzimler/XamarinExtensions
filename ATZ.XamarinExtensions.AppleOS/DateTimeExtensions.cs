@@ -1,5 +1,6 @@
 ﻿using ATZ.XamarinExtensions.AppleOS;
 using Foundation;
+using JetBrains.Annotations;
 using System;
 using System.Linq;
 using static System.TimeZoneInfo;
@@ -73,46 +74,22 @@ namespace ATZ.PlatformAccess.AppleOS
 
         // Fun fact: It turns out that this specific function is also implemented in Xamarin.Forms.Platform.iOS - however, it is currently missing from the MacOS platform.
         // ReSharper disable once MemberCanBePrivate.Global => Part of API
-        public static DateTime ToDateTimeV2([JetBrains.Annotations.NotNull] this NSDate nsDate)
+        public static DateTime ToDateTimeV2([NotNull] this NSDate nsDate)
         {
             var dateTimeInUtc = ReferenceDateInUtc.AddSeconds(nsDate.SecondsSinceReferenceDate);
-            var convertedDateTime = ConvertTimeFromUtc(dateTimeInUtc, LocalTimeZoneInfo);
+            var convertedDateTime = dateTimeInUtc + LocalTimeZoneInfo.BaseUtcOffset;
             if (LocalTimeZoneInfo.SupportsDaylightSavingTime)
             {
                 var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => convertedDateTime.Between(r.DateStart, r.DateEnd));
                 if (adjustmentRule != null)
                 {
-                    var invalid = LocalTimeZoneInfo.IsInvalidTime(convertedDateTime);
-                    var utcInsideTransitionPeriod = dateTimeInUtc.Between(adjustmentRule.DaylightSaving());
-                    var convertedOutsideDaylightSaving = convertedDateTime.Outside(adjustmentRule.DaylightSaving());
-                    var convertedInsideTransition = convertedDateTime.Between(adjustmentRule.DaylightSaving());
-                    var utcOutsideDaylightSaving = dateTimeInUtc.Outside(adjustmentRule.DaylightSaving());
-                    var daylightEnd = adjustmentRule.DaylightEnd();
-                    var daylightStart = adjustmentRule.DaylightStart();
-
-                    // correct solution for testcase 1 & 2
-                    if (invalid || !dateTimeInUtc.IsDaylightSavingTime() && convertedDateTime.IsDaylightSavingTime())
+                    var daylightSaving = convertedDateTime.Between(adjustmentRule.DaylightSaving());
+                    var utcDaylightSaving = convertedDateTime.Add(adjustmentRule.DaylightDelta).Between(adjustmentRule.DaylightSaving());
+                    if (daylightSaving && utcDaylightSaving)
                     {
                         return convertedDateTime + adjustmentRule.DaylightDelta;
                     }
-                    if (!invalid && dateTimeInUtc.IsDaylightSavingTime() && !convertedDateTime.IsDaylightSavingTime())
-                    {
-                        return convertedDateTime - adjustmentRule.DaylightDelta;
-                    }
-                    if (dateTimeInUtc == daylightStart)
-                    {
-                        return convertedDateTime + adjustmentRule.DaylightDelta;
-                    }
-                    if (dateTimeInUtc.IsDaylightSavingTime() && convertedDateTime.IsDaylightSavingTime())
-                    {
- //                       return convertedDateTime + adjustmentRule.DaylightDelta;
-                    }
-//                    if (misaligned && outsideDaylightSaving)
-////                    if (misaligned)
-                    //{
-                    //    convertedDateTime -= adjustmentRule.DaylightDelta;
-                    //}
-                }
+                 }
             }
 
             return convertedDateTime;

@@ -50,6 +50,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             testFixture.TransitionedBackToAESTCorrectlyEvenIfTheSystemInitializedTheTimeZone();
             testFixture.UtcCrossedDaylightSavingTransitionBackReferenceZone();
             testFixture.UtcCrossedDaylightSavingTransitionBackReferenceZoneEvenIfTheSystemInitializedTheTimeZone();
+            testFixture.EndingDaylight();
         }
 
         private void VerifyIfBugStillExists()
