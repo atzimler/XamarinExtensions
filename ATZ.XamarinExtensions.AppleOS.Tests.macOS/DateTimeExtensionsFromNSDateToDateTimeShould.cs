@@ -70,5 +70,23 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             var dateTime = nsDate.ToDateTimeV2();
             Assert.AreEqual(new DateTime(2018, 4, 1, 6, 0, 0), dateTime);
         }
+
+        [Test]
+        public void AESTNewYearIsCorrect()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(536418000);
+            var dateTime = nsDate.ToDateTimeV2();
+            Assert.AreEqual(new DateTime(2018, 1, 1, 0, 0, 0), dateTime);
+        }
+
+        [Test]
+        public void AESTNewYearIsCorrectEvenIfTheSystemInitializedTheTimeZone()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(536418000);
+            var dateTime = nsDate.ToDateTimeV2();
+            Assert.AreEqual(new DateTime(2018, 1, 1, 0, 0, 0), dateTime);
+        }
     }
 }

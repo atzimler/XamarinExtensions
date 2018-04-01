@@ -84,7 +84,7 @@ namespace ATZ.PlatformAccess.AppleOS
                     {
                         convertedDateTime += adjustmentRule.DaylightDelta;
                     }
-                    if (!invalid && dateTimeInUtc.IsDaylightSavingTime())
+                    if (!invalid && dateTimeInUtc.IsDaylightSavingTime() && !convertedDateTime.IsDaylightSavingTime())
                     {
                         convertedDateTime -= adjustmentRule.DaylightDelta;
                     }
