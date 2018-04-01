@@ -22,12 +22,6 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             var str = tz.DisplayName;
             var adjustmentRules = tz.GetAdjustmentRules();
 
-            // Making sure the bug is still there.
-            // This produces assertion exception - probably the values are mismatching. The nsDate seconds are correct, the transformation was the other way around.
-            //var dateTime = new DateTime(2018, 4, 1, 7, 0, 0);
-            //var nsDate = dateTime.ToNSDate();
-            //Assert.AreEqual(544219200, nsDate.SecondsSinceReferenceDate);
-
             // Local TZ is Australia, Sydney, DayLightName: AEDT, Standard Name: AEST
             VerifyIfBugStillExists();
 
@@ -37,7 +31,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
-            var testFixture = new DateTimeExtensionsFromNSDateToDateTimeShould();
+            var testFixture = new DateTimeExtensionsShould();
             testFixture.OneTimeSetUp();
             testFixture.Winter();
             testFixture.BeforeDaylight();

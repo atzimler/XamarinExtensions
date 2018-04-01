@@ -90,7 +90,7 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="DateTimeExtensionsFromNSDateToDateTimeShould.cs" />
+    <Compile Include="DateTimeExtensionsShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />

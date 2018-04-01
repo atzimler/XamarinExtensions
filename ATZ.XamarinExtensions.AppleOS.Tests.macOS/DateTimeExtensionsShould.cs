@@ -11,11 +11,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
         {
             Assert.AreEqual(utcDateString, nsDate.ToString());
             Assert.AreEqual(localDateTime, nsDate.ToDateTime());
+
+            var nsDate2 = localDateTime.ToNSDate();
+            Assert.AreEqual(utcDateString, nsDate2.ToString());
         }
     }
 
     [TestFixture]
-    public class DateTimeExtensionsFromNSDateToDateTimeShould
+    public class DateTimeExtensionsShould
     {
         private readonly DateTime ReferenceDateTimeUtc = new DateTime(2001, 1, 1, 0, 0, 0);
         private readonly DateTime DaylightStartsAtUtc = new DateTime(2018, 10, 6, 16, 0, 0);
