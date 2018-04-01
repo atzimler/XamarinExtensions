@@ -29,7 +29,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             //Assert.AreEqual(544219200, nsDate.SecondsSinceReferenceDate);
 
             // Local TZ is Australia, Sydney, DayLightName: AEDT, Standard Name: AEST
-            //VerifyIfBugStillExists();
+            VerifyIfBugStillExists();
 
             //MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
             //VerifyNSDateToDateTime();

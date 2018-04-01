@@ -17,16 +17,6 @@ namespace ATZ.PlatformAccess.AppleOS
             ReferenceDateInUtc = new DateTime(2001, 1, 1, 0, 0, 0);
         }
 
-        private static bool IsDaylightAdjustmentMisaligned(DateTime convertedDateTime, DateTime dateTimeInUtc)
-        {
-            if (convertedDateTime.Kind == DateTimeKind.Local)
-            {
-                return dateTimeInUtc.IsDaylightSavingTime();
-            }
-
-            return convertedDateTime.IsDaylightSavingTime() || dateTimeInUtc.IsDaylightSavingTime();
-        }
-
         #region Interval Operators
         public static bool Between(this DateTime dateTime, DateTime from, DateTime to)
         {
@@ -85,11 +75,24 @@ namespace ATZ.PlatformAccess.AppleOS
             if (LocalTimeZoneInfo.SupportsDaylightSavingTime)
             {
                 var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => convertedDateTime.Between(r.DateStart, r.DateEnd));
-                if (adjustmentRule != null 
-                    && IsDaylightAdjustmentMisaligned(convertedDateTime, dateTimeInUtc)
-                    && convertedDateTime.Outside(adjustmentRule.DaylightSaving()))
+                if (adjustmentRule != null)
                 {
-                    convertedDateTime -= adjustmentRule.DaylightDelta;
+                    var invalid = LocalTimeZoneInfo.IsInvalidTime(convertedDateTime);
+
+                    // correct solution for testcase 1 & 2
+                    if (invalid)
+                    {
+                        convertedDateTime += adjustmentRule.DaylightDelta;
+                    }
+                    if (!invalid && dateTimeInUtc.IsDaylightSavingTime())
+                    {
+                        convertedDateTime -= adjustmentRule.DaylightDelta;
+                    }
+//                    if (misaligned && outsideDaylightSaving)
+////                    if (misaligned)
+                    //{
+                    //    convertedDateTime -= adjustmentRule.DaylightDelta;
+                    //}
                 }
             }
 
