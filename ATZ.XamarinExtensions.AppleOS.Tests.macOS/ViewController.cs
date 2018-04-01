@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using AppKit;
 using ATZ.PlatformAccess.AppleOS;
 using Foundation;
@@ -18,6 +18,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             base.ViewDidLoad();
 
             var tz = TimeZoneInfo.Local;
+            var tzs = TimeZoneInfo.GetSystemTimeZones();
             var str = tz.DisplayName;
             var adjustmentRules = tz.GetAdjustmentRules();
 
@@ -28,7 +29,21 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             //Assert.AreEqual(544219200, nsDate.SecondsSinceReferenceDate);
 
             // Local TZ is Australia, Sydney, DayLightName: AEDT, Standard Name: AEST
+            VerifyIfBugStillExists();
 
+            //MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
+            //VerifyNSDateToDateTime();
+
+
+            // Do any additional setup after loading the view.
+            // TODO: Correct after fixing the DateTime conversion bug.
+            var testFixture = new DateTimeExtensionsShould();
+            testFixture.ConvertDaylightTransitionStartCorrectlyFromNSDateToDateTime();
+            testFixture.ConvertsDateCorrectly();
+        }
+
+        private void VerifyIfBugStillExists()
+        {
             // This is the incorrect conversion.
             var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544219200); // 2018/03/31, 20:00:00 +0000
             var dateTime = nsDate.ToDateTime(); // UTC+10 - clock change occured during the night
@@ -47,16 +62,53 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             var nsDate4 = NSDate.FromTimeIntervalSinceReferenceDate(544561200); // 2018/04/04, 19:00:00 +0000
             var dateTime4 = nsDate4.ToDateTime(); // UTC+10
             Assert.AreEqual(new DateTime(2018, 4, 5, 5, 0, 0), dateTime4);
+        }
 
+        private void VerifyNSDateToDateTime()
+        {
+            var pointInTime = 536418000;
+            var endInspectionPointInTime = 567954000;
+            var timeZoneName = "AEDT";
+            var expectedDateTime = new DateTime(2018, 1, 1, 0, 0, 0);
+            while (pointInTime < endInspectionPointInTime)
+            {
+                var inspectedNSDate = NSDate.FromTimeIntervalSinceReferenceDate(pointInTime);
+                var convertedDateTime = inspectedNSDate.ToDateTime();
 
-            MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-  
+                if (expectedDateTime.ToString() != convertedDateTime.ToString())
+                {
+                    if (TimeZoneInfo.Local.SupportsDaylightSavingTime)
+                    {
+                        var adjustmentRule = TimeZoneInfo.Local.GetAdjustmentRules().FirstOrDefault(r => convertedDateTime.Between(r.DateStart, r.DateEnd));
+                        if (adjustmentRule != null)
+                        {
+                            if (convertedDateTime.Outside(adjustmentRule.DaylightSaving()))
+                            {
+                                convertedDateTime -= adjustmentRule.DaylightDelta;
+                            }
+                            //if (convertedDateTime < adjustmentRule.DaylightTransitionStart || adjustmentRule.DaylightTransitionEnd <= convertedDateTime)
+                            //{
+                            //    convertedDateTime -= adjustmentRule.DaylightDelta;
+                            //}
+                        }
+                    }
+                }
 
+                Assert.AreEqual(expectedDateTime.ToString(), convertedDateTime.ToString(), $"point in time: {pointInTime}");
 
-            // Do any additional setup after loading the view.
-            // TODO: Correct after fixing the DateTime conversion bug.
-            var testFixture = new DateTimeExtensionsShould();
-            testFixture.ConvertsDateCorrectly();
+                pointInTime += 300;
+                expectedDateTime += new TimeSpan(0, 5, 0);
+                if (timeZoneName == "AEDT" && expectedDateTime == new DateTime(2018, 4, 1, 3, 0, 0))
+                {
+                    expectedDateTime = new DateTime(2018, 4, 1, 2, 0, 0);
+                    timeZoneName = "AEST";
+                }
+                if (timeZoneName == "AEST" && expectedDateTime == new DateTime(2018, 10, 7, 2, 0, 0))
+                {
+                    expectedDateTime = new DateTime(2018, 10, 7, 3, 0, 0);
+                    timeZoneName = "AEDT";
+                }
+            }
         }
 
         private void MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference()
