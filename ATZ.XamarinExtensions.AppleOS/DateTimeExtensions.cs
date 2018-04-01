@@ -18,6 +18,11 @@ namespace ATZ.PlatformAccess.AppleOS
         }
 
         #region Interval Operators
+        public static bool Between(this DateTime dateTime, ValueTuple<DateTime, DateTime> interval)
+        {
+            return Between(dateTime, interval.Item1, interval.Item2);
+        }
+
         public static bool Between(this DateTime dateTime, DateTime from, DateTime to)
         {
             return from <= dateTime && dateTime <= to;
@@ -78,15 +83,29 @@ namespace ATZ.PlatformAccess.AppleOS
                 if (adjustmentRule != null)
                 {
                     var invalid = LocalTimeZoneInfo.IsInvalidTime(convertedDateTime);
+                    var utcInsideTransitionPeriod = dateTimeInUtc.Between(adjustmentRule.DaylightSaving());
+                    var convertedOutsideDaylightSaving = convertedDateTime.Outside(adjustmentRule.DaylightSaving());
+                    var convertedInsideTransition = convertedDateTime.Between(adjustmentRule.DaylightSaving());
+                    var utcOutsideDaylightSaving = dateTimeInUtc.Outside(adjustmentRule.DaylightSaving());
+                    var daylightEnd = adjustmentRule.DaylightEnd();
+                    var daylightStart = adjustmentRule.DaylightStart();
 
                     // correct solution for testcase 1 & 2
                     if (invalid || !dateTimeInUtc.IsDaylightSavingTime() && convertedDateTime.IsDaylightSavingTime())
                     {
-                        convertedDateTime += adjustmentRule.DaylightDelta;
+                        return convertedDateTime + adjustmentRule.DaylightDelta;
                     }
                     if (!invalid && dateTimeInUtc.IsDaylightSavingTime() && !convertedDateTime.IsDaylightSavingTime())
                     {
-                        convertedDateTime -= adjustmentRule.DaylightDelta;
+                        return convertedDateTime - adjustmentRule.DaylightDelta;
+                    }
+                    if (dateTimeInUtc == daylightStart)
+                    {
+                        return convertedDateTime + adjustmentRule.DaylightDelta;
+                    }
+                    if (dateTimeInUtc.IsDaylightSavingTime() && convertedDateTime.IsDaylightSavingTime())
+                    {
+ //                       return convertedDateTime + adjustmentRule.DaylightDelta;
                     }
 //                    if (misaligned && outsideDaylightSaving)
 ////                    if (misaligned)

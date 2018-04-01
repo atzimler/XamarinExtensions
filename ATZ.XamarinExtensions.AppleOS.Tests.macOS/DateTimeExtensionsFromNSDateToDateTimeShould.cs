@@ -96,7 +96,6 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560538000);
             var dateTime = nsDate.ToDateTimeV2();
             Assert.AreEqual(new DateTime(2018, 10, 7, 4, 0, 0), dateTime);
-
         }
 
         [Test]
@@ -106,7 +105,24 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560538000);
             var dateTime = nsDate.ToDateTimeV2();
             Assert.AreEqual(new DateTime(2018, 10, 7, 4, 0, 0), dateTime);
+        }
 
+        [Test]
+        public void UtcCrossedDaylightSavingTransitionBackReferenceZone()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560570400);
+            var dateTime = nsDate.ToDateTimeV2();
+            Assert.AreEqual(new DateTime(2018, 10, 7, 13, 0, 0), dateTime);
+        }
+
+        [Test]
+        public void UtcCrossedDaylightSavingTransitionBackReferenceZoneEvenIfTheSystemInitializedTheTimeZone()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560570400);
+            var dateTime = nsDate.ToDateTimeV2();
+            Assert.AreEqual(new DateTime(2018, 10, 7, 13, 0, 0), dateTime);
         }
     }
 }

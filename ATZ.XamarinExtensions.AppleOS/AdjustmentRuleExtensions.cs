@@ -18,7 +18,7 @@ namespace ATZ.XamarinExtensions.AppleOS
 
         public static DateTime DaylightStart(this AdjustmentRule adjustmentRule)
         {
-            return adjustmentRule.DaylightTransitionStart.ToDateTime(adjustmentRule.DateStart.Year).AddSeconds(-1);
+            return adjustmentRule.DaylightTransitionStart.ToDateTime(adjustmentRule.DateStart.Year); //.AddSeconds(-1);
         }
     }
 }

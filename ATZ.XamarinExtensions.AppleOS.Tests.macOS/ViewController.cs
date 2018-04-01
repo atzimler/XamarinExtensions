@@ -48,6 +48,8 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             testFixture.AESTNewYearIsCorrectEvenIfTheSystemInitializedTheTimeZone();
             testFixture.TransitionedBackToAESTCorrectly();
             testFixture.TransitionedBackToAESTCorrectlyEvenIfTheSystemInitializedTheTimeZone();
+            testFixture.UtcCrossedDaylightSavingTransitionBackReferenceZone();
+            testFixture.UtcCrossedDaylightSavingTransitionBackReferenceZoneEvenIfTheSystemInitializedTheTimeZone();
         }
 
         private void VerifyIfBugStillExists()
