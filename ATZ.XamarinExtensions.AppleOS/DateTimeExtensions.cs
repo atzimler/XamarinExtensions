@@ -80,7 +80,7 @@ namespace ATZ.PlatformAccess.AppleOS
                     var invalid = LocalTimeZoneInfo.IsInvalidTime(convertedDateTime);
 
                     // correct solution for testcase 1 & 2
-                    if (invalid)
+                    if (invalid || !dateTimeInUtc.IsDaylightSavingTime() && convertedDateTime.IsDaylightSavingTime())
                     {
                         convertedDateTime += adjustmentRule.DaylightDelta;
                     }

@@ -88,5 +88,25 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             var dateTime = nsDate.ToDateTimeV2();
             Assert.AreEqual(new DateTime(2018, 1, 1, 0, 0, 0), dateTime);
         }
+
+        [Test]
+        public void TransitionedBackToAESTCorrectly()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560538000);
+            var dateTime = nsDate.ToDateTimeV2();
+            Assert.AreEqual(new DateTime(2018, 10, 7, 4, 0, 0), dateTime);
+
+        }
+
+        [Test]
+        public void TransitionedBackToAESTCorrectlyEvenIfTheSystemInitializedTheTimeZone()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(560538000);
+            var dateTime = nsDate.ToDateTimeV2();
+            Assert.AreEqual(new DateTime(2018, 10, 7, 4, 0, 0), dateTime);
+
+        }
     }
 }

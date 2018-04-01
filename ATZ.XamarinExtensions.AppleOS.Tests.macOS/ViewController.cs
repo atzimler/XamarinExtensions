@@ -46,6 +46,8 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             testFixture.ConvertsDateCorrectlyEvenIfSystemInitializedTheTimeZone();
             testFixture.AESTNewYearIsCorrect();
             testFixture.AESTNewYearIsCorrectEvenIfTheSystemInitializedTheTimeZone();
+            testFixture.TransitionedBackToAESTCorrectly();
+            testFixture.TransitionedBackToAESTCorrectlyEvenIfTheSystemInitializedTheTimeZone();
         }
 
         private void VerifyIfBugStillExists()
