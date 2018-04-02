@@ -13,11 +13,23 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
         }
 
+        private double CalculatePointInTime(DateTime dateTime, TimeSpan timeZoneDifference)
+        {
+            var referenceUtcDate = new DateTime(2001, 1, 1, 0, 0, 0);
+            var utcDateTime = dateTime - timeZoneDifference;
+            var referenceTimeSpan = utcDateTime - referenceUtcDate;
+            return referenceTimeSpan.TotalSeconds;
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
             var timeZones = TimeZoneInfo.GetSystemTimeZones();
+
+            // Calculation.
+            var from = CalculatePointInTime(new DateTime(2018, 1, 1, 0, 0, 0), new TimeSpan(-5, 0, 0));
+            var to = CalculatePointInTime(new DateTime(2019, 1, 1, 0, 0, 0), new TimeSpan(-5, 0, 0));
 
             // Integration.
             var integrationTestFixture = new DateTimeExtensionsIntegrationTests();
@@ -29,15 +41,17 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             // TODO: Correct after fixing the DateTime conversion bug.
             var testFixture = new DateTimeExtensionsShould();
             testFixture.OneTimeSetUp();
-            testFixture.Winter();
-            testFixture.BeforeDaylight();
-            testFixture.StartDaylightCorrectly();
-            testFixture.AfterDaylight();
-            testFixture.Summer();
-            testFixture.BeforeStandard();
-            testFixture.EndDaylightCorrectly();
-            testFixture.AfterStandard();
-            testFixture.VerifyIf_CAL262_IsFixed();
+            //testFixture.Winter();
+            //testFixture.BeforeDaylight();
+            //testFixture.StartDaylightCorrectly();
+            //testFixture.AfterDaylight();
+            //testFixture.Summer();
+            //testFixture.BeforeStandard();
+            //testFixture.EndDaylightCorrectly();
+            //testFixture.AfterStandard();
+            //testFixture.VerifyIf_CAL262_IsFixed();
+            testFixture.X();
+
             // TODO: testFixture.ThrowExceptionOnInvalidDateTime();
             // TODO: Test where adjustmentRule is not existing. There was a time zone, where in 1930s there was some adjusting but then they discontinued it. It is at the beginning of the time zones list.
             // TODO: Test nothern globe.

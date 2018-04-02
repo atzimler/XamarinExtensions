@@ -9,6 +9,8 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
     {
         public string DisplayName { get; set; }
         public AmbigousTimeResolution StartsInTimeResolution { get; set; }
+        public int VerifyFrom { get; set; }
+        public int VerifyTo { get; set; }
 
         public DateTime DaylightTransitionTime { get; set; }
         public DateTime DaylightTransitionedTime { get; set; }
@@ -22,6 +24,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
             DisplayName = "America/New_York",
             StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            VerifyFrom = 536475600, VerifyTo = 568011600,
 
             DaylightTransitionTime = new DateTime(2018, 3, 11, 2, 0, 0),
             DaylightTransitionedTime = new DateTime(2018, 3, 11, 3, 0, 0),
@@ -33,6 +36,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
             DisplayName = "Australia/Sydney",
             StartsInTimeResolution = AmbigousTimeResolution.DaylightSaving,
+            VerifyFrom = 536418000, VerifyTo = 567954000,
 
             DaylightTransitionTime = new DateTime(2018, 10, 7, 2, 0, 0),
             DaylightTransitionedTime = new DateTime(2018, 10, 7, 3, 0, 0),
@@ -42,13 +46,12 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 
         public void VerifyTimeZone(TimeZoneVerificationRecord verificationRecord)
         {
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(verificationRecord.DisplayName);
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(verificationRecord.DisplayName);
             var resolution = verificationRecord.StartsInTimeResolution;
 
-            var pointInTime = 536418000;
-            var endInspectionPointInTime = 567954000;
+            var pointInTime = verificationRecord.VerifyFrom;
             var expectedDateTime = new DateTime(2018, 1, 1, 0, 0, 0);
-            while (pointInTime < endInspectionPointInTime)
+            while (pointInTime < verificationRecord.VerifyTo)
             {
                 var inspectedNSDate = NSDate.FromTimeIntervalSinceReferenceDate(pointInTime);
                 var convertedDateTime = inspectedNSDate.ToDateTime();

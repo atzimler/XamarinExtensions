@@ -169,7 +169,5 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             var dateTime4 = nsDate4.ToDateTime(); // UTC+10
             Assert.AreEqual(new DateTime(2018, 4, 5, 5, 0, 0), dateTime4);
         }
-
-
     }
 }
