@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using ATZ.PlatformAccess.AppleOS;
 using Foundation;
+using System.Linq;
 
 namespace ATZ.XamarinExtensions.AppleOS.Tests
 {
@@ -177,6 +178,25 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             var localDateTime = new DateTime(2018, 10, 7, 2, 30, 0);
             var ex = Assert.Throws<InvalidDateTimeException>(() => localDateTime.ToNSDate());
             Assert.AreEqual("2018-10-07, 02:30:00 is invalid in the time zone 'Australia/Sydney'!", ex.Message);
+        }
+
+        [Test]
+        public void LocalGivesDebuggableInformation()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.Local;
+            Assert.IsTrue(
+                TimeZoneInfo.Local.SupportsDaylightSavingTime,
+                "Sorry, this has to be tested in a location where there is support for daylight saving in the local time zone.");
+            var adjustmentRule = TimeZoneInfo.Local.GetAdjustmentRules().FirstOrDefault(r => r.DateStart.Between(new DateTime(2018, 1, 1), new DateTime(2019, 1, 1)));
+            Assert.IsNotNull(
+                adjustmentRule,
+                "Sorry, this has to be tested in a location where we actually can find adjustment rules.");
+            var daylightEnd = adjustmentRule.DaylightEnd();
+            var halfDelta = new TimeSpan(0, (int)adjustmentRule.DaylightDelta.TotalMinutes / 2, 0);
+            var ambigousTime = daylightEnd - halfDelta;
+
+            var ex = Assert.Throws<AmbigousDateTimeException>(() => ambigousTime.ToNSDate());
+            Assert.AreEqual($"2019-04-07, 02:29:59 is ambigous in the time zone 'Local'! The local time zone: StandardName: {TimeZoneInfo.Local.StandardName}, DaylightName: {TimeZoneInfo.Local.DaylightName}, BaseUtcOffset: {TimeZoneInfo.Local.BaseUtcOffset}.", ex.Message);
         }
     }
 }

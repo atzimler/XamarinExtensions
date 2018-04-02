@@ -1,4 +1,6 @@
 ﻿using System;
+using ATZ.PlatformAccess.AppleOS;
+
 namespace ATZ.XamarinExtensions.AppleOS
 {
     public class InvalidDateTimeException : Exception
@@ -7,7 +9,7 @@ namespace ATZ.XamarinExtensions.AppleOS
         public TimeZoneInfo TimeZoneInfo { get; }
 
         public InvalidDateTimeException(DateTime dateTime, TimeZoneInfo timeZoneInfo)
-            : base($"{dateTime:yyyy-MM-dd, HH:mm:ss} is invalid in the time zone '{timeZoneInfo.DisplayName}'!")
+            : base(dateTime.ExceptionMessage(timeZoneInfo, "is invalid"))
         {
             DateTime = dateTime;
             TimeZoneInfo = timeZoneInfo;

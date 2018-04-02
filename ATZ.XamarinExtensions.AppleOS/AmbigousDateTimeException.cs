@@ -1,4 +1,6 @@
 ﻿using System;
+using ATZ.PlatformAccess.AppleOS;
+
 namespace ATZ.XamarinExtensions.AppleOS
 {
     public class AmbigousDateTimeException : Exception
@@ -7,7 +9,7 @@ namespace ATZ.XamarinExtensions.AppleOS
         public TimeZoneInfo TimeZoneInfo { get; }
 
         public AmbigousDateTimeException(DateTime dateTime, TimeZoneInfo timeZoneInfo)
-            : base($"{dateTime:yyyy-MM-dd, HH:mm:ss} is ambigous in the time zone '{timeZoneInfo.DisplayName}'!")
+            : base(dateTime.ExceptionMessage(timeZoneInfo, "is ambigous"))
         {
             DateTime = dateTime;
             TimeZoneInfo = timeZoneInfo;

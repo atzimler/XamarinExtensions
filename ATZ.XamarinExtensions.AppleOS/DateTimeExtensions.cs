@@ -18,6 +18,16 @@ namespace ATZ.PlatformAccess.AppleOS
             ReferenceDateInUtc = new DateTime(2001, 1, 1, 0, 0, 0);
         }
 
+        public static string ExceptionMessage(this DateTime dateTime, TimeZoneInfo timeZoneInfo, string label)
+        {
+            var message = $"{dateTime:yyyy-MM-dd, HH:mm:ss} {label} in the time zone '{timeZoneInfo.DisplayName}'!";
+            if (timeZoneInfo.DisplayName == "Local")
+            {
+                message += $" The local time zone: StandardName: {timeZoneInfo.StandardName}, DaylightName: {timeZoneInfo.DaylightName}, BaseUtcOffset: {timeZoneInfo.BaseUtcOffset}.";
+            }
+            return message;
+        }
+
         #region Interval Operators
         public static bool Between(this DateTime dateTime, ValueTuple<DateTime, DateTime> interval)
         {
