@@ -12,5 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DateTimeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdjustmentRuleExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransitionTimeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AmbigousTimeResolution.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AmbigousDateTimeException.cs" />
   </ItemGroup>
 </Project>

@@ -59,22 +59,24 @@ namespace ATZ.PlatformAccess.AppleOS
         public static DateTime ToDateTime([NotNull] this NSDate nsDate)
         {
             var dateTimeInUtc = ReferenceDateInUtc.AddSeconds(nsDate.SecondsSinceReferenceDate);
-            var convertedDateTime = dateTimeInUtc + LocalTimeZoneInfo.BaseUtcOffset;
+            var dateTimeInStandard = dateTimeInUtc + LocalTimeZoneInfo.BaseUtcOffset;
             if (LocalTimeZoneInfo.SupportsDaylightSavingTime)
             {
-                var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => convertedDateTime.Between(r.DateStart, r.DateEnd));
+                var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => dateTimeInStandard.Between(r.DateStart, r.DateEnd));
                 if (adjustmentRule != null)
                 {
-                    var daylightSaving = convertedDateTime.Between(adjustmentRule.DaylightSaving());
-                    var utcDaylightSaving = convertedDateTime.Add(adjustmentRule.DaylightDelta).Between(adjustmentRule.DaylightSaving());
-                    if (daylightSaving && utcDaylightSaving)
+                    // TODO: Increase performance by not recalculating DaylightSaving.
+                    var standardInDaylightSaving = dateTimeInStandard.Between(adjustmentRule.DaylightSaving());
+                    var daylightInDaylightSaving = dateTimeInStandard.Add(adjustmentRule.DaylightDelta).Between(adjustmentRule.DaylightSaving());
+
+                    if (standardInDaylightSaving && daylightInDaylightSaving)
                     {
-                        return convertedDateTime + adjustmentRule.DaylightDelta;
+                        return dateTimeInStandard + adjustmentRule.DaylightDelta;
                     }
                  }
             }
 
-            return convertedDateTime;
+            return dateTimeInStandard;
         }
 
         // Fun fact: It turns out that this specific function is also implemented in Xamarin.Forms.Platform.iOS - however, it is currently missing from the MacOS platform.
@@ -82,7 +84,42 @@ namespace ATZ.PlatformAccess.AppleOS
         // ReSharper disable once MemberCanBePrivate.Global => Part of API
         public static NSDate ToNSDate(this DateTime dateTime)
         {
-            var dateTimeInUtc = TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
+            return ToNSDate(dateTime, AmbigousTimeResolution.Exception);
+        }
+
+        private static DateTime ToStandardTime(DateTime dateTime, AmbigousTimeResolution ambigousTimeResolution)
+        {
+            var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => dateTime.Between(r.DateStart, r.DateEnd));
+            if (adjustmentRule == null)
+            {
+                return dateTime;
+            }
+
+            var daylightStart = adjustmentRule.DaylightStart();
+            var daylightStarted = daylightStart + adjustmentRule.DaylightDelta;
+            var daylightEnd = adjustmentRule.DaylightEnd();
+            var daylightEnded = daylightEnd - adjustmentRule.DaylightDelta;
+
+            var isAmbigous = dateTime.Between(daylightEnded, daylightEnd);
+            if (isAmbigous && ambigousTimeResolution == AmbigousTimeResolution.Exception)
+            {
+                throw new AmbigousDateTimeException(dateTime, LocalTimeZoneInfo);
+            }
+
+            if (dateTime.Between(daylightStarted, daylightEnded)
+                || isAmbigous && ambigousTimeResolution == AmbigousTimeResolution.DaylightSaving)
+            {
+                return dateTime - adjustmentRule.DaylightDelta;
+            }
+
+            return dateTime;
+        }
+
+        public static NSDate ToNSDate(this DateTime dateTime, AmbigousTimeResolution ambigousTimeResolution)
+        {
+            var dateTimeInStandard = ToStandardTime(dateTime, ambigousTimeResolution);
+
+            var dateTimeInUtc = dateTimeInStandard - LocalTimeZoneInfo.BaseUtcOffset;
             var sinceReferenceDate = dateTimeInUtc - ReferenceDateInUtc;
             return Foundation.NSDate.FromTimeIntervalSinceReferenceDate(sinceReferenceDate.TotalSeconds);
         }

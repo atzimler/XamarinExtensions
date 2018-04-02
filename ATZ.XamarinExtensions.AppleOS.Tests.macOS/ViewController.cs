@@ -23,27 +23,51 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             var adjustmentRules = tz.GetAdjustmentRules();
 
             // Local TZ is Australia, Sydney, DayLightName: AEDT, Standard Name: AEST
-            VerifyIfBugStillExists();
+            VerifyIfBugIsFixed();
 
-            //MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-            VerifyNSDateToDateTime();
-
+            // Integration.
+            MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
+            //ManualConversionVerification();
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
             var testFixture = new DateTimeExtensionsShould();
             testFixture.OneTimeSetUp();
-            testFixture.Winter();
-            testFixture.BeforeDaylight();
-            testFixture.StartDaylightCorrectly();
-            testFixture.AfterDaylight();
-            testFixture.Summer();
+            //testFixture.Winter();
+            //testFixture.BeforeDaylight();
+            //testFixture.StartDaylightCorrectly();
+            //testFixture.AfterDaylight();
+            //testFixture.Summer();
             testFixture.BeforeStandard();
             testFixture.EndDaylightCorrectly();
             testFixture.AfterStandard();
+            // TODO: testFixture.ThrowExceptionOnInvalidDateTime();
+            // TODO: Test where adjustmentRule is not existing. There was a time zone, where in 1930s there was some adjusting but then they discontinued it. It is at the beginning of the time zones list.
+            // TODO: Test nothern globe.
+            // TODO: Test time zone where !SupportsDaylightSaving.
+            // TODO: Test if gives useful time zone information when ambigous time and it is throwing exception, but was initialized with TimeZoneInfo.Local.
         }
 
-        private void VerifyIfBugStillExists()
+        private void MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference()
+        {
+            var expected = 536418000;
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(expected);
+            Assert.AreEqual("2017-12-31 13:00:00 +0000", nsDate.ToString());
+
+            var toSeconds = 567954000;
+            var toNSDate = NSDate.FromTimeIntervalSinceReferenceDate(toSeconds);
+            Assert.AreEqual("2018-12-31 13:00:00 +0000", toNSDate.ToString());
+
+            while (expected < toSeconds)
+            {
+                Assert.AreEqual(expected, (int)nsDate.SecondsSinceReferenceDate);
+
+                expected += 300;
+                nsDate = NSDate.FromTimeIntervalSinceReferenceDate(expected);
+            }
+        }
+
+        private void VerifyIfBugIsFixed()
         {
             // This is now a correct conversion.
             var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544219200); // 2018/03/31, 20:00:00 +0000
@@ -66,18 +90,23 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             Assert.AreEqual(new DateTime(2018, 4, 5, 5, 0, 0), dateTime4);
         }
 
-        private void VerifyNSDateToDateTime()
+        private void ManualConversionVerification()
         {
             var pointInTime = 536418000;
             var endInspectionPointInTime = 567954000;
             var timeZoneName = "AEDT";
             var expectedDateTime = new DateTime(2018, 1, 1, 0, 0, 0);
+            var ambigousTimeResolution = AmbigousTimeResolution.DaylightSaving;
             while (pointInTime < endInspectionPointInTime)
             {
                 var inspectedNSDate = NSDate.FromTimeIntervalSinceReferenceDate(pointInTime);
                 var convertedDateTime = inspectedNSDate.ToDateTime();
 
-                Assert.AreEqual(expectedDateTime.ToString(), convertedDateTime.ToString(), $"point in time: {pointInTime}");
+                Assert.AreEqual(expectedDateTime.ToString(), convertedDateTime.ToString(), $"ToDateTime() point in time: {pointInTime}");
+
+                var convertedNSDate = convertedDateTime.ToNSDate(ambigousTimeResolution);
+                Assert.AreEqual(pointInTime, (int)convertedNSDate.SecondsSinceReferenceDate,
+                                $"ToNSDate() point in time: {convertedDateTime:yyyy/MM/dd, HH:mm:ss}, UTC: {inspectedNSDate}");
 
                 pointInTime += 300;
                 expectedDateTime += new TimeSpan(0, 5, 0);
@@ -85,31 +114,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
                 {
                     expectedDateTime = new DateTime(2018, 4, 1, 2, 0, 0);
                     timeZoneName = "AEST";
+                    ambigousTimeResolution = AmbigousTimeResolution.Standard;
                 }
                 if (timeZoneName == "AEST" && expectedDateTime == new DateTime(2018, 10, 7, 2, 0, 0))
                 {
                     expectedDateTime = new DateTime(2018, 10, 7, 3, 0, 0);
                     timeZoneName = "AEDT";
+                    ambigousTimeResolution = AmbigousTimeResolution.DaylightSaving;
                 }
-            }
-        }
-
-        private void MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference()
-        {
-            var expected = 536418000;
-            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(expected);
-            Assert.AreEqual("2017-12-31 13:00:00 +0000", nsDate.ToString());
-
-            var toSeconds = 567954000;
-            var toNSDate = NSDate.FromTimeIntervalSinceReferenceDate(toSeconds);
-            Assert.AreEqual("2018-12-31 13:00:00 +0000", toNSDate.ToString());
-
-            while (expected < toSeconds)
-            {
-                Assert.AreEqual(expected, (int)nsDate.SecondsSinceReferenceDate);
-
-                expected += 300;
-                nsDate = NSDate.FromTimeIntervalSinceReferenceDate(expected);
             }
         }
 
