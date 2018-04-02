@@ -17,10 +17,13 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
             base.ViewDidLoad();
 
+            var timeZones = TimeZoneInfo.GetSystemTimeZones();
+
             // Integration.
             var integrationTestFixture = new DateTimeExtensionsIntegrationTests();
-            integrationTestFixture.MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-            integrationTestFixture.FullVerificationOfTimeZonesIn2018();
+            //integrationTestFixture.MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
+            //integrationTestFixture.FullVerificationOfTimeZonesIn2018();
+            integrationTestFixture.VerifyTimeZone(integrationTestFixture.NewYork);
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.

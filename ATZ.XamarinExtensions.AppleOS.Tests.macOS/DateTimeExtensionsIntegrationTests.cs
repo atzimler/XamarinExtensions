@@ -18,6 +18,17 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 
     public class DateTimeExtensionsIntegrationTests
     {
+        public TimeZoneVerificationRecord NewYork = new TimeZoneVerificationRecord
+        {
+            DisplayName = "America/New_York",
+            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+
+            DaylightTransitionTime = new DateTime(2018, 3, 11, 2, 0, 0),
+            DaylightTransitionedTime = new DateTime(2018, 3, 11, 3, 0, 0),
+            StandardTransitionTime = new DateTime(2018, 11, 4, 2, 0, 0),
+            StandardTransitionedTime = new DateTime(2018, 11, 4, 1, 0, 0)
+        };
+
         public TimeZoneVerificationRecord Sydney = new TimeZoneVerificationRecord
         {
             DisplayName = "Australia/Sydney",
@@ -29,7 +40,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             StandardTransitionedTime = new DateTime(2018, 4, 1, 2, 0, 0)
         };
 
-        private void VerifyTimeZone(TimeZoneVerificationRecord verificationRecord)
+        public void VerifyTimeZone(TimeZoneVerificationRecord verificationRecord)
         {
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(verificationRecord.DisplayName);
             var resolution = verificationRecord.StartsInTimeResolution;
@@ -73,6 +84,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         public void FullVerificationOfTimeZonesIn2018()
         {
             VerifyTimeZone(Sydney);
+            VerifyTimeZone(NewYork);
         }
 
         [Test]
