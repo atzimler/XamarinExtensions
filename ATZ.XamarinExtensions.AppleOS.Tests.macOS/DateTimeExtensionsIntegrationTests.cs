@@ -5,42 +5,74 @@ using NUnit.Framework;
 
 namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 {
+    public class TimeZoneVerificationRecord
+    {
+        public string DisplayName { get; set; }
+        public AmbigousTimeResolution StartsInTimeResolution { get; set; }
+
+        public DateTime DaylightTransitionTime { get; set; }
+        public DateTime DaylightTransitionedTime { get; set; }
+        public DateTime StandardTransitionTime { get; set; }
+        public DateTime StandardTransitionedTime { get; set; }
+    }
+
     public class DateTimeExtensionsIntegrationTests
     {
-        [Test]
-        public void FullVerificationOfTimeZoneIn2018()
+        public TimeZoneVerificationRecord Sydney = new TimeZoneVerificationRecord
         {
+            DisplayName = "Australia/Sydney",
+            StartsInTimeResolution = AmbigousTimeResolution.DaylightSaving,
+
+            DaylightTransitionTime = new DateTime(2018, 10, 7, 2, 0, 0),
+            DaylightTransitionedTime = new DateTime(2018, 10, 7, 3, 0, 0),
+            StandardTransitionTime = new DateTime(2018, 4, 1, 3, 0, 0),
+            StandardTransitionedTime = new DateTime(2018, 4, 1, 2, 0, 0)
+        };
+
+        private void VerifyTimeZone(TimeZoneVerificationRecord verificationRecord)
+        {
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(verificationRecord.DisplayName);
+            var resolution = verificationRecord.StartsInTimeResolution;
+
             var pointInTime = 536418000;
             var endInspectionPointInTime = 567954000;
-            var timeZoneName = "AEDT";
             var expectedDateTime = new DateTime(2018, 1, 1, 0, 0, 0);
-            var ambigousTimeResolution = AmbigousTimeResolution.DaylightSaving;
             while (pointInTime < endInspectionPointInTime)
             {
                 var inspectedNSDate = NSDate.FromTimeIntervalSinceReferenceDate(pointInTime);
                 var convertedDateTime = inspectedNSDate.ToDateTime();
 
-                Assert.AreEqual(expectedDateTime.ToString(), convertedDateTime.ToString(), $"ToDateTime() point in time: {pointInTime}");
+                Assert.AreEqual(
+                    expectedDateTime.ToString(), convertedDateTime.ToString(),
+                    $"ToDateTime() point in time: {pointInTime}, in time zone: {verificationRecord.DisplayName}");
 
-                var convertedNSDate = convertedDateTime.ToNSDate(ambigousTimeResolution);
-                Assert.AreEqual(pointInTime, (int)convertedNSDate.SecondsSinceReferenceDate,
-                                $"ToNSDate() point in time: {convertedDateTime:yyyy/MM/dd, HH:mm:ss}, UTC: {inspectedNSDate}");
+                var convertedNSDate = convertedDateTime.ToNSDate(resolution);
+                Assert.AreEqual(
+                    pointInTime, (int)convertedNSDate.SecondsSinceReferenceDate,
+                    $"ToNSDate() point in time: {convertedDateTime:yyyy/MM/dd, HH:mm:ss}, UTC: {inspectedNSDate}, in time zone: {verificationRecord.DisplayName}");
 
                 pointInTime += 300;
                 expectedDateTime += new TimeSpan(0, 5, 0);
-                if (timeZoneName == "AEDT" && expectedDateTime == new DateTime(2018, 4, 1, 3, 0, 0))
+                if (resolution == AmbigousTimeResolution.Standard 
+                    && expectedDateTime == verificationRecord.DaylightTransitionTime)
                 {
-                    expectedDateTime = new DateTime(2018, 4, 1, 2, 0, 0);
-                    timeZoneName = "AEST";
-                    ambigousTimeResolution = AmbigousTimeResolution.Standard;
+                    expectedDateTime = verificationRecord.DaylightTransitionedTime;
+                    resolution = AmbigousTimeResolution.DaylightSaving;
                 }
-                if (timeZoneName == "AEST" && expectedDateTime == new DateTime(2018, 10, 7, 2, 0, 0))
+
+                if (resolution == AmbigousTimeResolution.DaylightSaving
+                    && expectedDateTime == verificationRecord.StandardTransitionTime)
                 {
-                    expectedDateTime = new DateTime(2018, 10, 7, 3, 0, 0);
-                    timeZoneName = "AEDT";
-                    ambigousTimeResolution = AmbigousTimeResolution.DaylightSaving;
+                    expectedDateTime = verificationRecord.StandardTransitionedTime;
+                    resolution = AmbigousTimeResolution.Standard;
                 }
             }
+        }
+
+        [Test]
+        public void FullVerificationOfTimeZonesIn2018()
+        {
+            VerifyTimeZone(Sydney);
         }
 
         [Test]

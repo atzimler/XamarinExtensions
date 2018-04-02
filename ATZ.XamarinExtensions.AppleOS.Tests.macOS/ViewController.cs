@@ -17,12 +17,10 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
             base.ViewDidLoad();
 
-            // Local TZ is Australia, Sydney, DayLightName: AEDT, Standard Name: AEST
-
             // Integration.
             var integrationTestFixture = new DateTimeExtensionsIntegrationTests();
             integrationTestFixture.MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-            integrationTestFixture.FullVerificationOfTimeZoneIn2018();
+            integrationTestFixture.FullVerificationOfTimeZonesIn2018();
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
