@@ -91,6 +91,7 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="DateTimeExtensionsShould.cs" />
+    <Compile Include="DateTimeExtensionsIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />

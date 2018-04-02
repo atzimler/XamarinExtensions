@@ -134,6 +134,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             localDateTime.IsAmbigous(butItIs: AmbigousTimeResolution.Standard, andItShouldBeConvertedTo: UtcDateString);
         }
 
+        [Test]
         public void AfterStandard()
         {
             var nsDate = GetNSDateUtc(DaylightEndsAtUtc.AddHours(1));
@@ -143,5 +144,32 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             nsDate.Is(UtcDateString, localDateTime);
             localDateTime.IsUnambigous(UtcDateString);
         }
+
+
+        [Test]
+        public void VerifyIf_CAL262_IsFixed()
+        {
+            // This is now a correct conversion.
+            var nsDate = NSDate.FromTimeIntervalSinceReferenceDate(544219200); // 2018/03/31, 20:00:00 +0000
+            var dateTime = nsDate.ToDateTime(); // UTC+10 - clock change occured during the night
+            Assert.AreEqual("2018-03-31 20:00:00 +0000", nsDate.ToString());
+            Assert.AreEqual(new DateTime(2018, 4, 1, 6, 0, 0), dateTime);
+
+            // Just to make sure everything really works, the other side of the problematic event (the starting date) was this.
+            var nsDate2 = NSDate.FromTimeIntervalSinceReferenceDate(544186800); // 2018/03/31, 11:00:00 +0000
+            var dateTime2 = nsDate2.ToDateTime(); // UTC+11 - This day is already in UTC+10, but clock change has not occured yet.
+            Assert.AreEqual(new DateTime(2018, 3, 31, 22, 0, 0), dateTime2);
+
+            // These are working correctly even when the bug is present:
+            var nsDate3 = NSDate.FromTimeIntervalSinceReferenceDate(543607200); // 2018/03/24, 18:00:00 +0000
+            var dateTime3 = nsDate3.ToDateTime(); // UTC+11
+            Assert.AreEqual(new DateTime(2018, 3, 25, 5, 0, 0), dateTime3);
+
+            var nsDate4 = NSDate.FromTimeIntervalSinceReferenceDate(544561200); // 2018/04/04, 19:00:00 +0000
+            var dateTime4 = nsDate4.ToDateTime(); // UTC+10
+            Assert.AreEqual(new DateTime(2018, 4, 5, 5, 0, 0), dateTime4);
+        }
+
+
     }
 }
