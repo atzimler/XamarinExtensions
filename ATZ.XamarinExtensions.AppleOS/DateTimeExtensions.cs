@@ -110,7 +110,7 @@ namespace ATZ.PlatformAccess.AppleOS
             var daylightEnd = adjustmentRule.DaylightEnd();
             var daylightEnded = daylightEnd - adjustmentRule.DaylightDelta;
 
-            if (dateTime.Between(daylightStart, daylightStarted))
+            if (daylightStart <= dateTime && dateTime < daylightStarted)
             {
                 throw new InvalidDateTimeException(dateTime, LocalTimeZoneInfo);
             }
