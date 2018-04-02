@@ -10,6 +10,9 @@
     <licenseUrl>https://raw.githubusercontent.com/atzimler/XamarinExtensions/master/LICENSE.txt</licenseUrl>
     <description>Library for additional Xamarin.Forms API, iOS specific parts.</description>
     <releaseNotes>
+1.1.0:
+- Fixing daylight change problems.
+
 1.0.0:
 - Initial NuGet packaging.
     </releaseNotes>
