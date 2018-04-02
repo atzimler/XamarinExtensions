@@ -50,7 +50,6 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             //testFixture.EndDaylightCorrectly();
             //testFixture.AfterStandard();
             //testFixture.VerifyIf_CAL262_IsFixed();
-            testFixture.X();
 
             // TODO: testFixture.ThrowExceptionOnInvalidDateTime();
             // TODO: Test where adjustmentRule is not existing. There was a time zone, where in 1930s there was some adjusting but then they discontinued it. It is at the beginning of the time zones list.
