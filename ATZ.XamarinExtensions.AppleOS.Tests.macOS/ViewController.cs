@@ -17,11 +17,6 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
             base.ViewDidLoad();
 
-            var tz = TimeZoneInfo.Local;
-            var tzs = TimeZoneInfo.GetSystemTimeZones();
-            var str = tz.DisplayName;
-            var adjustmentRules = tz.GetAdjustmentRules();
-
             // Local TZ is Australia, Sydney, DayLightName: AEDT, Standard Name: AEST
             VerifyIfBugIsFixed();
 
