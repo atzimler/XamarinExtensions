@@ -169,5 +169,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             var dateTime4 = nsDate4.ToDateTime(); // UTC+10
             Assert.AreEqual(new DateTime(2018, 4, 5, 5, 0, 0), dateTime4);
         }
+
+        [Test]
+        public void VerifyInvalidDateTimeException()
+        {
+            DateTimeExtensions.LocalTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney");
+            var localDateTime = new DateTime(2018, 10, 7, 2, 30, 0);
+            var ex = Assert.Throws<InvalidDateTimeException>(() => localDateTime.ToNSDate());
+            Assert.AreEqual("2018-10-07, 02:30:00 is invalid in the time zone 'Australia/Sydney'!", ex.Message);
+        }
     }
 }

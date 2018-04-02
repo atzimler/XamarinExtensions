@@ -100,6 +100,11 @@ namespace ATZ.PlatformAccess.AppleOS
             var daylightEnd = adjustmentRule.DaylightEnd();
             var daylightEnded = daylightEnd - adjustmentRule.DaylightDelta;
 
+            if (dateTime.Between(daylightStart, daylightStarted))
+            {
+                throw new InvalidDateTimeException(dateTime, LocalTimeZoneInfo);
+            }
+
             var isAmbigous = dateTime.Between(daylightEnded, daylightEnd);
             if (isAmbigous && ambigousTimeResolution == AmbigousTimeResolution.Exception)
             {

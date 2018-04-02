@@ -50,8 +50,8 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             //testFixture.EndDaylightCorrectly();
             //testFixture.AfterStandard();
             //testFixture.VerifyIf_CAL262_IsFixed();
+            testFixture.VerifyInvalidDateTimeException();
 
-            // TODO: testFixture.ThrowExceptionOnInvalidDateTime();
             // TODO: Test if gives useful time zone information when ambigous time and it is throwing exception, but was initialized with TimeZoneInfo.Local.
 
             // TODO: Transform this into a console, so that it can run on the build server
