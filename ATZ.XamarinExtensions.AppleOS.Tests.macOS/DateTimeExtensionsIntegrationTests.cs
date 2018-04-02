@@ -11,11 +11,12 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         public AmbigousTimeResolution StartsInTimeResolution { get; set; }
         public int VerifyFrom { get; set; }
         public int VerifyTo { get; set; }
+        public DateTime DateTimeStartsFrom { get; set; } = new DateTime(2018, 1, 1, 0, 0, 0);
 
-        public DateTime DaylightTransitionTime { get; set; }
-        public DateTime DaylightTransitionedTime { get; set; }
-        public DateTime StandardTransitionTime { get; set; }
-        public DateTime StandardTransitionedTime { get; set; }
+        public DateTime DaylightTransitionTime { get; set; } = DateTime.MinValue;
+        public DateTime DaylightTransitionedTime { get; set; } = DateTime.MinValue;
+        public DateTime StandardTransitionTime { get; set; } = DateTime.MinValue;
+        public DateTime StandardTransitionedTime { get; set; } = DateTime.MinValue;
     }
 
     public class DateTimeExtensionsIntegrationTests
@@ -24,24 +25,34 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
             DisplayName = "Africa/Abidjan",
             StartsInTimeResolution = AmbigousTimeResolution.Standard,
-            VerifyFrom = 536457600, VerifyTo = 567993600,
+            VerifyFrom = 536457600, VerifyTo = 567993600
+        };
 
-            DaylightTransitionTime = DateTime.MinValue,
-            DaylightTransitionedTime = DateTime.MinValue,
-            StandardTransitionTime = DateTime.MinValue,
-            StandardTransitionedTime = DateTime.MinValue
+        public TimeZoneVerificationRecord Accra1941 = new TimeZoneVerificationRecord
+        {
+            DisplayName = "Africa/Accra",
+            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            VerifyFrom = -1893456000, VerifyTo = -1861920000,
+            DateTimeStartsFrom = new DateTime(1941, 1, 1, 0, 0, 0),
+
+            DaylightTransitionTime = new DateTime(1941, 9, 1, 0, 0, 0),
+            DaylightTransitionedTime = new DateTime(1941, 9, 1, 0, 20, 0),
+            StandardTransitionTime = new DateTime(1941, 12, 31, 0, 0, 0),
+            StandardTransitionedTime = new DateTime(1941, 12, 30, 23, 40, 0)
+        };
+
+        public TimeZoneVerificationRecord Accra2018 = new TimeZoneVerificationRecord
+        {
+            DisplayName = "Africa/Accra",
+            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            VerifyFrom = 536457600, VerifyTo = 567993600
         };
 
         public TimeZoneVerificationRecord AddisAbaba = new TimeZoneVerificationRecord
         {
             DisplayName = "Africa/Addis_Ababa",
             StartsInTimeResolution = AmbigousTimeResolution.Standard,
-            VerifyFrom = 536446800, VerifyTo = 567982800,
-
-            DaylightTransitionTime = DateTime.MinValue,
-            DaylightTransitionedTime = DateTime.MinValue,
-            StandardTransitionTime = DateTime.MinValue,
-            StandardTransitionedTime = DateTime.MinValue
+            VerifyFrom = 536446800, VerifyTo = 567982800
         };
 
         public TimeZoneVerificationRecord NewYork = new TimeZoneVerificationRecord
@@ -74,7 +85,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             var resolution = verificationRecord.StartsInTimeResolution;
 
             var pointInTime = verificationRecord.VerifyFrom;
-            var expectedDateTime = new DateTime(2018, 1, 1, 0, 0, 0);
+            var expectedDateTime = verificationRecord.DateTimeStartsFrom;
             while (pointInTime < verificationRecord.VerifyTo)
             {
                 var inspectedNSDate = NSDate.FromTimeIntervalSinceReferenceDate(pointInTime);
@@ -108,12 +119,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         }
 
         [Test]
-        public void FullVerificationOfTimeZonesIn2018()
+        public void FullVerificationOfTimeZones()
         {
             VerifyTimeZone(Sydney);
             VerifyTimeZone(NewYork);
             VerifyTimeZone(Abidjan);
             VerifyTimeZone(AddisAbaba);
+            VerifyTimeZone(Accra1941);
+            VerifyTimeZone(Accra2018);
         }
 
         [Test]

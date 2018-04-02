@@ -28,14 +28,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             var timeZones = TimeZoneInfo.GetSystemTimeZones();
 
             // Calculation.
-            var from = CalculatePointInTime(new DateTime(2018, 1, 1, 0, 0, 0), new TimeSpan(3, 0, 0));
-            var to = CalculatePointInTime(new DateTime(2019, 1, 1, 0, 0, 0), new TimeSpan(3, 0, 0));
+            var from = CalculatePointInTime(new DateTime(1941, 1, 1, 0, 0, 0), new TimeSpan(0, 0, 0));
+            var to = CalculatePointInTime(new DateTime(1942, 1, 1, 0, 0, 0), new TimeSpan(0, 0, 0));
 
             // Integration.
             var integrationTestFixture = new DateTimeExtensionsIntegrationTests();
             //integrationTestFixture.MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
             //integrationTestFixture.FullVerificationOfTimeZonesIn2018();
-            var tz = timeZones.FirstOrDefault(t => !t.SupportsDaylightSavingTime && t.BaseUtcOffset != new TimeSpan(0, 0, 0));
+            var tz = timeZones.FirstOrDefault(t => t.GetAdjustmentRules().Count() > 0 && t.GetAdjustmentRules().Count(r => DateTime.Now.Between(r.DateStart, r.DateEnd)) == 0);
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
@@ -52,7 +52,6 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             //testFixture.VerifyIf_CAL262_IsFixed();
 
             // TODO: testFixture.ThrowExceptionOnInvalidDateTime();
-            // TODO: Test where adjustmentRule is not existing. There was a time zone, where in 1930s there was some adjusting but then they discontinued it. It is at the beginning of the time zones list.
             // TODO: Test if gives useful time zone information when ambigous time and it is throwing exception, but was initialized with TimeZoneInfo.Local.
 
             // TODO: Transform this into a console, so that it can run on the build server
