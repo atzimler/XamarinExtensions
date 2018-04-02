@@ -27,17 +27,17 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 
             // Integration.
             MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
-            //ManualConversionVerification();
+            ManualConversionVerification();
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.
             var testFixture = new DateTimeExtensionsShould();
             testFixture.OneTimeSetUp();
-            //testFixture.Winter();
-            //testFixture.BeforeDaylight();
-            //testFixture.StartDaylightCorrectly();
-            //testFixture.AfterDaylight();
-            //testFixture.Summer();
+            testFixture.Winter();
+            testFixture.BeforeDaylight();
+            testFixture.StartDaylightCorrectly();
+            testFixture.AfterDaylight();
+            testFixture.Summer();
             testFixture.BeforeStandard();
             testFixture.EndDaylightCorrectly();
             testFixture.AfterStandard();
