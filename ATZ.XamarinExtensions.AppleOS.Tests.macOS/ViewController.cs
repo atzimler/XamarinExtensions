@@ -28,15 +28,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             var timeZones = TimeZoneInfo.GetSystemTimeZones();
 
             // Calculation.
-            var from = CalculatePointInTime(new DateTime(2018, 1, 1, 0, 0, 0), new TimeSpan(0, 0, 0));
-            var to = CalculatePointInTime(new DateTime(2019, 1, 1, 0, 0, 0), new TimeSpan(0, 0, 0));
+            var from = CalculatePointInTime(new DateTime(2018, 1, 1, 0, 0, 0), new TimeSpan(3, 0, 0));
+            var to = CalculatePointInTime(new DateTime(2019, 1, 1, 0, 0, 0), new TimeSpan(3, 0, 0));
 
             // Integration.
             var integrationTestFixture = new DateTimeExtensionsIntegrationTests();
             //integrationTestFixture.MakeSureThereIsNoInternalNSDateBugWithSecondsSinceReference();
             //integrationTestFixture.FullVerificationOfTimeZonesIn2018();
-            // TODO: Test time zone where !SupportsDaylightSaving - a non UTC one too.
-
+            var tz = timeZones.FirstOrDefault(t => !t.SupportsDaylightSavingTime && t.BaseUtcOffset != new TimeSpan(0, 0, 0));
 
             // Do any additional setup after loading the view.
             // TODO: Correct after fixing the DateTime conversion bug.

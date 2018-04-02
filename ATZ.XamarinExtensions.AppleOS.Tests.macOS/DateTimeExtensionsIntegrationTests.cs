@@ -32,6 +32,18 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             StandardTransitionedTime = DateTime.MinValue
         };
 
+        public TimeZoneVerificationRecord AddisAbaba = new TimeZoneVerificationRecord
+        {
+            DisplayName = "Africa/Addis_Ababa",
+            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            VerifyFrom = 536446800, VerifyTo = 567982800,
+
+            DaylightTransitionTime = DateTime.MinValue,
+            DaylightTransitionedTime = DateTime.MinValue,
+            StandardTransitionTime = DateTime.MinValue,
+            StandardTransitionedTime = DateTime.MinValue
+        };
+
         public TimeZoneVerificationRecord NewYork = new TimeZoneVerificationRecord
         {
             DisplayName = "America/New_York",
@@ -101,6 +113,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
             VerifyTimeZone(Sydney);
             VerifyTimeZone(NewYork);
             VerifyTimeZone(Abidjan);
+            VerifyTimeZone(AddisAbaba);
         }
 
         [Test]
