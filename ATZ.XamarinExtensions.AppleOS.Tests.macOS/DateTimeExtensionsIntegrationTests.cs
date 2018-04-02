@@ -20,6 +20,18 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 
     public class DateTimeExtensionsIntegrationTests
     {
+        public TimeZoneVerificationRecord Abidjan = new TimeZoneVerificationRecord
+        {
+            DisplayName = "Africa/Abidjan",
+            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            VerifyFrom = 536457600, VerifyTo = 567993600,
+
+            DaylightTransitionTime = DateTime.MinValue,
+            DaylightTransitionedTime = DateTime.MinValue,
+            StandardTransitionTime = DateTime.MinValue,
+            StandardTransitionedTime = DateTime.MinValue
+        };
+
         public TimeZoneVerificationRecord NewYork = new TimeZoneVerificationRecord
         {
             DisplayName = "America/New_York",
@@ -88,6 +100,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         {
             VerifyTimeZone(Sydney);
             VerifyTimeZone(NewYork);
+            VerifyTimeZone(Abidjan);
         }
 
         [Test]
