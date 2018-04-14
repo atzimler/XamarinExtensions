@@ -7,7 +7,7 @@ namespace ATZ.XamarinExtensions
     public static class GridExtensions
     {
         [NotNull]
-        public static T Place<T>([NotNull] T content, int atRow, int andColumn, [NotNull] Grid inside, int acrossRows = 1)
+        public static T Place<T>([NotNull] this Grid inside, [NotNull] T content, int atRow, int andColumn, int acrossRows = 1)
             where T : View
         {
             Grid.SetRow(content, atRow);
