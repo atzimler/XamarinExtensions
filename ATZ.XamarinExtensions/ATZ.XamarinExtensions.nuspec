@@ -10,6 +10,9 @@
     <licenseUrl>https://raw.githubusercontent.com/atzimler/XamarinExtensions/master/LICENSE.txt</licenseUrl>
     <description>Library for additional Xamarin.Forms API.</description>
     <releaseNotes>
+1.2.0:
+- GridExtensions.Place(T, atRow: andColumn: inside: acrossRows: )
+
 1.1.0:
 - Fixing daylight change problems.
 
