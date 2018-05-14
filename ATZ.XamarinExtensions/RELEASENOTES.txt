@@ -1,0 +1,11 @@
+2.0.0:
+- Migrating ATZ.XamarinExtensions to .NET Standard 1.0
+
+1.2.0:
+- GridExtensions.Place(T, atRow: andColumn: inside: acrossRows: )
+
+1.1.0:
+- Fixing daylight change problems.
+
+1.0.0:
+- Initial NuGet packaging.
