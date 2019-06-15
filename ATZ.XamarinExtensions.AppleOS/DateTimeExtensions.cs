@@ -47,6 +47,7 @@ namespace ATZ.PlatformAccess.AppleOS
         }
 
         // ReSharper disable once InconsistentNaming => NSDate is the name of the type.
+        
         public static DateTime FromNSDate(this DateTime dateTime, [JetBrains.Annotations.NotNull] NSDate nsDate)
         {
             return nsDate.ToDateTime();
