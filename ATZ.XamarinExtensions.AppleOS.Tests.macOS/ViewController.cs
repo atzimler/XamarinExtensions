@@ -1,6 +1,5 @@
 ﻿using System;
 using AppKit;
-using Foundation;
 
 namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 {
@@ -45,19 +44,6 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 
             // TODO: Transform this into a console, so that it can run on the build server
             // (the code uses Foundation calls, and a result cannot be built as portable .NET code, which prevents NUnit at the moment to run it up from the test runner).
-        }
-
-        public override NSObject RepresentedObject
-        {
-            get
-            {
-                return base.RepresentedObject;
-            }
-            set
-            {
-                base.RepresentedObject = value;
-                // Update the view, if already loaded.
-            }
         }
     }
 }

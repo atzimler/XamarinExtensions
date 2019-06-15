@@ -83,7 +83,7 @@ namespace ATZ.PlatformAccess.AppleOS
                     {
                         return dateTimeInStandard + adjustmentRule.DaylightDelta;
                     }
-                 }
+                }
             }
 
             return dateTimeInStandard;
@@ -115,14 +115,14 @@ namespace ATZ.PlatformAccess.AppleOS
                 throw new InvalidDateTimeException(dateTime, LocalTimeZoneInfo);
             }
 
-            var isAmbigous = dateTime.Between(daylightEnded, daylightEnd);
-            if (isAmbigous && ambiguousTimeResolution == AmbiguousTimeResolution.Exception)
+            var isAmbiguous = dateTime.Between(daylightEnded, daylightEnd);
+            if (isAmbiguous && ambiguousTimeResolution == AmbiguousTimeResolution.Exception)
             {
-                throw new AmbigousDateTimeException(dateTime, LocalTimeZoneInfo);
+                throw new AmbiguousDateTimeException(dateTime, LocalTimeZoneInfo);
             }
 
             if (dateTime.Between(daylightStarted, daylightEnded)
-                || isAmbigous && ambiguousTimeResolution == AmbiguousTimeResolution.DaylightSaving)
+                || isAmbiguous && ambiguousTimeResolution == AmbiguousTimeResolution.DaylightSaving)
             {
                 return dateTime - adjustmentRule.DaylightDelta;
             }
