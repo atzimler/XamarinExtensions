@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DateTimeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdjustmentRuleExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransitionTimeExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AmbigousTimeResolution.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AmbiguousTimeResolution.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AmbigousDateTimeException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InvalidDateTimeException.cs" />
   </ItemGroup>

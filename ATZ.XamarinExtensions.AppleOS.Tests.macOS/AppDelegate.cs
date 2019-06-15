@@ -6,10 +6,6 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
     [Register("AppDelegate")]
     public class AppDelegate : NSApplicationDelegate
     {
-        public AppDelegate()
-        {
-        }
-
         public override void DidFinishLaunching(NSNotification notification)
         {
             // Insert code here to initialize your application

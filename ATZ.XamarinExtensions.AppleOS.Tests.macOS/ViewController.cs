@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using AppKit;
-using ATZ.PlatformAccess.AppleOS;
 using Foundation;
-using NUnit.Framework;
 
 namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 {

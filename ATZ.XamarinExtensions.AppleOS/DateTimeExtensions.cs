@@ -48,19 +48,18 @@ namespace ATZ.PlatformAccess.AppleOS
 
         // ReSharper disable once InconsistentNaming => NSDate is the name of the type.
         
-        public static DateTime FromNSDate(this DateTime dateTime, [JetBrains.Annotations.NotNull] NSDate nsDate)
+        public static DateTime FromNSDate(this DateTime dateTime, [NotNull] NSDate nsDate)
         {
             return nsDate.ToDateTime();
         }
 
-        [JetBrains.Annotations.NotNull]
         public static DateTime DateTime(NSDate nsDate)
         {
             return nsDate.ToDateTime();
         }
 
         // ReSharper disable once InconsistentNaming => NSDate is the name of the type.
-        public static NSDate NSDate([JetBrains.Annotations.NotNull] DateTime dateTime)
+        public static NSDate NSDate(DateTime dateTime)
         {
             return dateTime.ToNSDate();
         }
@@ -95,10 +94,10 @@ namespace ATZ.PlatformAccess.AppleOS
         // ReSharper disable once MemberCanBePrivate.Global => Part of API
         public static NSDate ToNSDate(this DateTime dateTime)
         {
-            return ToNSDate(dateTime, AmbigousTimeResolution.Exception);
+            return ToNSDate(dateTime, AmbiguousTimeResolution.Exception);
         }
 
-        private static DateTime ToStandardTime(DateTime dateTime, AmbigousTimeResolution ambigousTimeResolution)
+        private static DateTime ToStandardTime(DateTime dateTime, AmbiguousTimeResolution ambiguousTimeResolution)
         {
             var adjustmentRule = LocalTimeZoneInfo.GetAdjustmentRules().FirstOrDefault(r => dateTime.Between(r.DateStart, r.DateEnd));
             if (adjustmentRule == null)
@@ -117,13 +116,13 @@ namespace ATZ.PlatformAccess.AppleOS
             }
 
             var isAmbigous = dateTime.Between(daylightEnded, daylightEnd);
-            if (isAmbigous && ambigousTimeResolution == AmbigousTimeResolution.Exception)
+            if (isAmbigous && ambiguousTimeResolution == AmbiguousTimeResolution.Exception)
             {
                 throw new AmbigousDateTimeException(dateTime, LocalTimeZoneInfo);
             }
 
             if (dateTime.Between(daylightStarted, daylightEnded)
-                || isAmbigous && ambigousTimeResolution == AmbigousTimeResolution.DaylightSaving)
+                || isAmbigous && ambiguousTimeResolution == AmbiguousTimeResolution.DaylightSaving)
             {
                 return dateTime - adjustmentRule.DaylightDelta;
             }
@@ -131,9 +130,9 @@ namespace ATZ.PlatformAccess.AppleOS
             return dateTime;
         }
 
-        public static NSDate ToNSDate(this DateTime dateTime, AmbigousTimeResolution ambigousTimeResolution)
+        public static NSDate ToNSDate(this DateTime dateTime, AmbiguousTimeResolution ambiguousTimeResolution)
         {
-            var dateTimeInStandard = ToStandardTime(dateTime, ambigousTimeResolution);
+            var dateTimeInStandard = ToStandardTime(dateTime, ambiguousTimeResolution);
 
             var dateTimeInUtc = dateTimeInStandard - LocalTimeZoneInfo.BaseUtcOffset;
             var sinceReferenceDate = dateTimeInUtc - ReferenceDateInUtc;

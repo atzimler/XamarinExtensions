@@ -1,5 +1,4 @@
 ﻿using System;
-using ATZ.PlatformAccess.AppleOS;
 using static System.TimeZoneInfo;
 
 namespace ATZ.XamarinExtensions.AppleOS

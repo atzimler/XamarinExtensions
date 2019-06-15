@@ -11,18 +11,18 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
         public static void IsUnambigous(this DateTime dateTime, string utcDateString)
         {
             Assert.AreEqual(utcDateString, dateTime.ToNSDate().ToString());
-            Assert.AreEqual(utcDateString, dateTime.ToNSDate(AmbigousTimeResolution.Exception).ToString());
-            Assert.AreEqual(utcDateString, dateTime.ToNSDate(AmbigousTimeResolution.Standard).ToString());
-            Assert.AreEqual(utcDateString, dateTime.ToNSDate(AmbigousTimeResolution.DaylightSaving).ToString());
+            Assert.AreEqual(utcDateString, dateTime.ToNSDate(AmbiguousTimeResolution.Exception).ToString());
+            Assert.AreEqual(utcDateString, dateTime.ToNSDate(AmbiguousTimeResolution.Standard).ToString());
+            Assert.AreEqual(utcDateString, dateTime.ToNSDate(AmbiguousTimeResolution.DaylightSaving).ToString());
         }
 
-        public static void IsAmbigous(this DateTime dateTime, string andItShouldBeConvertedTo, AmbigousTimeResolution butItIs)
+        public static void IsAmbigous(this DateTime dateTime, string andItShouldBeConvertedTo, AmbiguousTimeResolution butItIs)
         {
             var ex = Assert.Throws<AmbigousDateTimeException>(() => dateTime.ToNSDate());
             Assert.AreEqual(
                 $"{dateTime:yyyy-MM-dd, HH:mm:ss} is ambigous in the time zone '{DateTimeExtensions.LocalTimeZoneInfo.DisplayName}'!",
                 ex.Message);
-            ex = Assert.Throws<AmbigousDateTimeException>(() => dateTime.ToNSDate(AmbigousTimeResolution.Exception));
+            ex = Assert.Throws<AmbigousDateTimeException>(() => dateTime.ToNSDate(AmbiguousTimeResolution.Exception));
             Assert.AreEqual(
                 $"{dateTime:yyyy-MM-dd, HH:mm:ss} is ambigous in the time zone '{DateTimeExtensions.LocalTimeZoneInfo.DisplayName}'!",
                 ex.Message);
@@ -121,7 +121,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             const string UtcDateString = "2019-04-06 15:00:00 +0000";
 
             nsDate.Is(UtcDateString, localDateTime);
-            localDateTime.IsAmbigous(butItIs: AmbigousTimeResolution.DaylightSaving, andItShouldBeConvertedTo: UtcDateString);
+            localDateTime.IsAmbigous(butItIs: AmbiguousTimeResolution.DaylightSaving, andItShouldBeConvertedTo: UtcDateString);
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests
             const string UtcDateString = "2019-04-06 16:00:00 +0000";
 
             nsDate.Is(UtcDateString, localDateTime);
-            localDateTime.IsAmbigous(butItIs: AmbigousTimeResolution.Standard, andItShouldBeConvertedTo: UtcDateString);
+            localDateTime.IsAmbigous(butItIs: AmbiguousTimeResolution.Standard, andItShouldBeConvertedTo: UtcDateString);
         }
 
         [Test]

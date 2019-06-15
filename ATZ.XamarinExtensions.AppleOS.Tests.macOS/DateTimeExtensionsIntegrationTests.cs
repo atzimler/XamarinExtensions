@@ -8,7 +8,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
     public class TimeZoneVerificationRecord
     {
         public string DisplayName { get; set; }
-        public AmbigousTimeResolution StartsInTimeResolution { get; set; }
+        public AmbiguousTimeResolution StartsInTimeResolution { get; set; }
         public int VerifyFrom { get; set; }
         public int VerifyTo { get; set; }
         public DateTime DateTimeStartsFrom { get; set; } = new DateTime(2018, 1, 1, 0, 0, 0);
@@ -24,14 +24,14 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         public TimeZoneVerificationRecord Abidjan = new TimeZoneVerificationRecord
         {
             DisplayName = "Africa/Abidjan",
-            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            StartsInTimeResolution = AmbiguousTimeResolution.Standard,
             VerifyFrom = 536457600, VerifyTo = 567993600
         };
 
         public TimeZoneVerificationRecord Accra1941 = new TimeZoneVerificationRecord
         {
             DisplayName = "Africa/Accra",
-            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            StartsInTimeResolution = AmbiguousTimeResolution.Standard,
             VerifyFrom = -1893456000, VerifyTo = -1861920000,
             DateTimeStartsFrom = new DateTime(1941, 1, 1, 0, 0, 0),
 
@@ -44,21 +44,21 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         public TimeZoneVerificationRecord Accra2018 = new TimeZoneVerificationRecord
         {
             DisplayName = "Africa/Accra",
-            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            StartsInTimeResolution = AmbiguousTimeResolution.Standard,
             VerifyFrom = 536457600, VerifyTo = 567993600
         };
 
         public TimeZoneVerificationRecord AddisAbaba = new TimeZoneVerificationRecord
         {
             DisplayName = "Africa/Addis_Ababa",
-            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            StartsInTimeResolution = AmbiguousTimeResolution.Standard,
             VerifyFrom = 536446800, VerifyTo = 567982800
         };
 
         public TimeZoneVerificationRecord NewYork = new TimeZoneVerificationRecord
         {
             DisplayName = "America/New_York",
-            StartsInTimeResolution = AmbigousTimeResolution.Standard,
+            StartsInTimeResolution = AmbiguousTimeResolution.Standard,
             VerifyFrom = 536475600, VerifyTo = 568011600,
 
             DaylightTransitionTime = new DateTime(2018, 3, 11, 2, 0, 0),
@@ -70,7 +70,7 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
         public TimeZoneVerificationRecord Sydney = new TimeZoneVerificationRecord
         {
             DisplayName = "Australia/Sydney",
-            StartsInTimeResolution = AmbigousTimeResolution.DaylightSaving,
+            StartsInTimeResolution = AmbiguousTimeResolution.DaylightSaving,
             VerifyFrom = 536418000, VerifyTo = 567954000,
 
             DaylightTransitionTime = new DateTime(2018, 10, 7, 2, 0, 0),
@@ -102,18 +102,18 @@ namespace ATZ.XamarinExtensions.AppleOS.Tests.macOS
 
                 pointInTime += 300;
                 expectedDateTime += new TimeSpan(0, 5, 0);
-                if (resolution == AmbigousTimeResolution.Standard 
+                if (resolution == AmbiguousTimeResolution.Standard 
                     && expectedDateTime == verificationRecord.DaylightTransitionTime)
                 {
                     expectedDateTime = verificationRecord.DaylightTransitionedTime;
-                    resolution = AmbigousTimeResolution.DaylightSaving;
+                    resolution = AmbiguousTimeResolution.DaylightSaving;
                 }
 
-                if (resolution == AmbigousTimeResolution.DaylightSaving
+                if (resolution == AmbiguousTimeResolution.DaylightSaving
                     && expectedDateTime == verificationRecord.StandardTransitionTime)
                 {
                     expectedDateTime = verificationRecord.StandardTransitionedTime;
-                    resolution = AmbigousTimeResolution.Standard;
+                    resolution = AmbiguousTimeResolution.Standard;
                 }
             }
         }
